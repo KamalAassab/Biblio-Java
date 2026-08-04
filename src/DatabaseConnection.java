@@ -135,9 +135,12 @@ public class DatabaseConnection {
     // Ajoute des données de démonstration si la base est vide.
     public static void seedIfEmpty() throws SQLException {
         if (getLivres().isEmpty()) {
-            for (Livre b : SyncBooks.getAllBooks()) {
-                insertLivre(b);
-            }
+            insertLivre(new Livre(1, "La Boîte à Merveilles", "Ahmed Sefrioui", "autobiographique", "Ce roman raconte l'enfance de l'auteur à Fès, au Maroc.", true));
+            insertLivre(new Livre(2, "Antigone", "Jean Anouilh", "Tragédie", "Antigone défie le roi Créon en enterrant son frère Polynice.", true));
+            insertLivre(new Livre(3, "Le Dernier Jour d'un Condamné", "Victor Hugo", "Roman à thèse", "Un condamné à mort réfléchit à l'inhumanité de la peine de mort.", false));
+            insertLivre(new Livre(4, "L'Étranger", "Albert Camus", "Roman", "Meursault, indifférent, commet un meurtre et est jugé.", true));
+            insertLivre(new Livre(5, "Les Misérables", "Victor Hugo", "Roman historique", "La vie de Jean Valjean dans la France du XIXe siècle.", true));
+            insertLivre(new Livre(6, "Harry Potter à l'école des sorciers", "J.K. Rowling", "Fantastique", "Le jeune sorcier découvre Poudlard.", false));
         }
         // S'assure que les comptes de démonstration existent toujours.
         boolean hasDemoAdmin = false;

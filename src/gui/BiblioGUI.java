@@ -104,7 +104,8 @@ public class BiblioGUI extends JFrame {
         wrap.setOpaque(false);
         wrap.setBorder(BorderFactory.createEmptyBorder(0, 0, 16, 0));
 
-        RoundedPanel head = new RoundedPanel(Color.WHITE, 16);
+        RoundedPanel head = new RoundedPanel(Theme.PRIMARY, 16);
+        head.setGradient(Theme.PRIMARY, Theme.PRIMARY_2);
         head.setLayout(new BorderLayout());
         head.setBorder(BorderFactory.createEmptyBorder(0, 22, 0, 18));
 
@@ -113,10 +114,10 @@ public class BiblioGUI extends JFrame {
         tt.setLayout(new BoxLayout(tt, BoxLayout.Y_AXIS));
         pageTitle = new JLabel("");
         pageTitle.setFont(Theme.H2);
-        pageTitle.setForeground(Theme.TEXT);
+        pageTitle.setForeground(Color.WHITE);
         pageSub = new JLabel("");
         pageSub.setFont(Theme.SMALL);
-        pageSub.setForeground(Theme.MUTED);
+        pageSub.setForeground(new Color(255, 255, 255, 190));
         tt.add(pageTitle);
         tt.add(Box.createVerticalStrut(2));
         tt.add(pageSub);
@@ -136,7 +137,7 @@ public class BiblioGUI extends JFrame {
         }));
 
         IconButton refresh = new IconButton(Icons.Kind.REFRESH, 18)
-                .withColors(Theme.MUTED, new Color(235, 241, 250), Theme.PRIMARY);
+                .withColors(new Color(255, 255, 255, 210), new Color(255, 255, 255, 40), Color.WHITE);
         refresh.setToolTipText("Rafraîchir");
         refresh.addActionListener(e -> refreshAll());
 
