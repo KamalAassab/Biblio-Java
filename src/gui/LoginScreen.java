@@ -62,14 +62,14 @@ public class LoginScreen extends JFrame {
         RoundedButton min = new RoundedButton("─", RoundedButton.Style.GHOST).setCustomHover(new Color(255, 255, 255));
         min.setForeground(new Color(255, 255, 255, 190));
         min.setPreferredSize(new Dimension(40, 28));
-        min.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 14));
+        min.setFont(Theme.PLAIN_14);
         min.addActionListener(e -> setState(JFrame.ICONIFIED));
         min.setBounds(bg.getWidth() - 96, 14, 40, 28);
 
         RoundedButton close = new RoundedButton("✕", RoundedButton.Style.GHOST).setCustomHover(new Color(231, 76, 60));
         close.setForeground(new Color(255, 255, 255, 190));
         close.setPreferredSize(new Dimension(40, 28));
-        close.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 14));
+        close.setFont(Theme.PLAIN_14);
         close.addActionListener(e -> {
             dispose();
             System.exit(0);
@@ -233,11 +233,11 @@ public class LoginScreen extends JFrame {
                 Icons.paint(g, Icons.Kind.BOOK, x + 18, y + 18, 26, Color.WHITE);
             }
 
-            g.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 42));
+            g.setFont(Theme.TITLE_BIG);
             g.setColor(Color.WHITE);
             g.drawString("Biblio", x, y + 128);
 
-            g.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 15));
+            g.setFont(Theme.BODY_15);
             g.setColor(new Color(255, 255, 255, 200));
             g.drawString("Faculté des Sciences et Techniques de Settat", x, y + 154);
 
@@ -254,7 +254,7 @@ public class LoginScreen extends JFrame {
         private void drawFeature(Graphics2D g, int x, int y, String text) {
             g.setColor(new Color(255, 255, 255, 160));
             Icons.paint(g, Icons.Kind.CHECK, x, y - 10, 18, new Color(96, 232, 158));
-            g.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 15));
+            g.setFont(Theme.BODY_15);
             g.setColor(new Color(255, 255, 255, 215));
             g.drawString(text, x + 30, y);
         }
