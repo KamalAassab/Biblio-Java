@@ -13,6 +13,14 @@ public class Reservation {
     }
 
     //getters et setters
+    public Utilisateur getUtilisateur() {
+        return utilisateur;
+    }
+
+    public void setUtilisateur(Utilisateur utilisateur) {
+        this.utilisateur = utilisateur;
+    }
+
     public LocalDate getDateReservation() {
         return dateReservation;
     }

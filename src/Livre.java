@@ -20,6 +20,11 @@ public class Livre extends Document{
     public String getResume() {
         return resume;
     }
+
+    @Override
+    public String toString() {
+        return getTitre() + " — " + getAuteur();
+    }
     public void setResume(String resume) {
         this.resume = resume;
     }
