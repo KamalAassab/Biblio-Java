@@ -105,7 +105,7 @@ public class BookCard extends JPanel {
 
         int txtX = bx + 18;
         int y1 = by + bandH + 38;
-        g.setFont(new Font("Segoe UI", Font.BOLD, 15));
+        g.setFont(Theme.BOLD_15);
         g.setColor(Theme.TEXT);
         FontMetrics fm = g.getFontMetrics();
         String[] lines = wrap(livre.getTitre(), fm, bw - 36, 2);

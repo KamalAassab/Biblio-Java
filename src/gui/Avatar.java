@@ -34,7 +34,7 @@ public class Avatar extends JComponent {
         int s = Math.min(getWidth(), getHeight());
         Theme.gradientRound(g, 0, 0, s - 1, s - 1, s / 2, c1, c2);
         g.setColor(Color.WHITE);
-        g.setFont(new Font("Segoe UI", Font.BOLD, Math.round(size * 0.34f)));
+        g.setFont(Theme.FONT_BOLD.deriveFont(Font.BOLD, Math.round(size * 0.34f)));
         FontMetrics fm = g.getFontMetrics();
         int tw = fm.stringWidth(initials);
         int x = (s - tw) / 2;

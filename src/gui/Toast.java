@@ -20,7 +20,7 @@ public final class Toast {
         p.setBorder(BorderFactory.createEmptyBorder(12, 24, 12, 24));
         JLabel l = new JLabel(text);
         l.setForeground(Color.WHITE);
-        l.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        l.setFont(Theme.BOLD_13);
         p.add(l, java.awt.BorderLayout.CENTER);
         win.setContentPane(p);
         win.pack();

@@ -7,11 +7,14 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.FontFormatException;
+import java.awt.GraphicsEnvironment;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.io.File;
 
 public final class Theme {
     private Theme() {}
@@ -45,13 +48,42 @@ public final class Theme {
     public static final int RADIUS = 16;
     public static final int CARD_RADIUS = 22;
 
-    public static final Font FONT = new Font("Segoe UI", Font.PLAIN, 14);
-    public static final Font FONT_BOLD = new Font("Segoe UI", Font.BOLD, 14);
-    public static final Font H1 = new Font("Segoe UI", Font.BOLD, 26);
-    public static final Font H2 = new Font("Segoe UI", Font.BOLD, 19);
-    public static final Font NUMBER = new Font("Segoe UI", Font.BOLD, 30);
-    public static final Font SMALL = new Font("Segoe UI", Font.PLAIN, 12);
-    public static final Font SMALL_BOLD = new Font("Segoe UI", Font.BOLD, 12);
+    public static final String FONT_FAMILY = "Inter";
+
+    private static Font loadFont(String fileName, int style) {
+        try {
+            String base = System.getProperty("user.dir");
+            File f = new File(base, "Inter" + File.separator + "static" + File.separator + fileName);
+            if (!f.exists()) {
+                f = new File("Inter/static/" + fileName);
+            }
+            Font font = Font.createFont(Font.TRUETYPE_FONT, f).deriveFont(style);
+            GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(font);
+            return font;
+        } catch (Exception e) {
+            System.out.println("Inter font not found: " + fileName + " – falling back to SansSerif");
+            return new Font("SansSerif", style, 14);
+        }
+    }
+
+    private static final Font INTER_REGULAR = loadFont("Inter_18pt-Regular.ttf", Font.PLAIN);
+    private static final Font INTER_SEMIBOLD = loadFont("Inter_18pt-SemiBold.ttf", Font.BOLD);
+    private static final Font INTER_BOLD = loadFont("Inter_18pt-Bold.ttf", Font.BOLD);
+    private static final Font INTER_MEDIUM = loadFont("Inter_18pt-Medium.ttf", Font.PLAIN);
+
+    public static final Font FONT       = INTER_REGULAR.deriveFont(14f);
+    public static final Font FONT_BOLD  = INTER_SEMIBOLD.deriveFont(14f);
+    public static final Font H1         = INTER_BOLD.deriveFont(26f);
+    public static final Font H2         = INTER_SEMIBOLD.deriveFont(19f);
+    public static final Font NUMBER     = INTER_BOLD.deriveFont(30f);
+    public static final Font SMALL      = INTER_REGULAR.deriveFont(12f);
+    public static final Font SMALL_BOLD = INTER_SEMIBOLD.deriveFont(12f);
+    public static final Font TITLE_BIG  = INTER_BOLD.deriveFont(42f);
+    public static final Font BODY_15    = INTER_REGULAR.deriveFont(15f);
+    public static final Font BOLD_15    = INTER_SEMIBOLD.deriveFont(15f);
+    public static final Font BOLD_24    = INTER_SEMIBOLD.deriveFont(24f);
+    public static final Font BOLD_13    = INTER_SEMIBOLD.deriveFont(13f);
+    public static final Font PLAIN_14   = INTER_REGULAR.deriveFont(14f);
 
     public static Color mix(Color a, Color b, float t) {
         return new Color(

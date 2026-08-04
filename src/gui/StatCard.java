@@ -44,7 +44,7 @@ public class StatCard extends JPanel {
         Theme.gradientRound(g, cx, cy, chip, chip, 10, accent, Theme.mix(accent, Color.WHITE, 0.30f));
         Icons.paint(g, icon, cx + (chip - 18) / 2, cy + (chip - 18) / 2, 18, Color.WHITE);
 
-        g.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        g.setFont(Theme.BOLD_24);
         g.setColor(Theme.TEXT);
         FontMetrics fm = g.getFontMetrics();
         int vx = bx + 14;

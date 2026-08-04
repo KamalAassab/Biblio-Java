@@ -90,7 +90,7 @@ public final class Chrome {
                 super.paintComponent(g0);
             }
         };
-        b.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 14));
+        b.setFont(Theme.PLAIN_14);
         b.setFocusPainted(false);
         b.setBorderPainted(false);
         b.setContentAreaFilled(false);
