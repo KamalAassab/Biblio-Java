@@ -1,0 +1,17 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="Gestion_de_biblio:war exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/Gestion_de_biblio_war_exploded</output-path>
+    <root id="root">
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="Gestion_de_biblio" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="mysql-connector-j-9.1.0" />
+        </element>
+      </element>
+      <element id="javaee-facet-resources" facet="Gestion_de_biblio/web/Web" />
+      <element id="dir-copy" path="$PROJECT_DIR$/web" />
+    </root>
+  </artifact>
+</component>
