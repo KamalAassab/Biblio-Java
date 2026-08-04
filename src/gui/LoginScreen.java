@@ -180,7 +180,7 @@ public class LoginScreen extends JFrame {
             gui.setVisible(true);
             dispose();
         } catch (Exception ex) {
-            showError("Base de données indisponible. Vérifiez DATABASE_URL ou %LOCALAPPDATA%\\Biblio-Java\\database.url.");
+            showError("Base de données indisponible. Vérifiez DATABASE_URL, le fichier .env ou %LOCALAPPDATA%\\Biblio-Java\\database.url.");
         }
     }
 

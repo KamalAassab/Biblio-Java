@@ -20,7 +20,7 @@ public class DatabaseConnection {
     public static Connection getConnection() throws SQLException {
         String rawUrl = readDatabaseUrl();
         if (rawUrl == null || rawUrl.isBlank()) {
-            throw new SQLException("DATABASE_URL n'est pas définie. Ajoutez l'URL dans la variable d'environnement ou dans %LOCALAPPDATA%\\Biblio-Java\\database.url.");
+            throw new SQLException("DATABASE_URL n'est pas définie. Créez un fichier .env dans le dossier de l' application ou dans %LOCALAPPDATA%\\Biblio-Java\\database.url.");
         }
         return DriverManager.getConnection(toJdbcUrl(rawUrl));
     }
@@ -29,15 +29,30 @@ public class DatabaseConnection {
         String envUrl = System.getenv("DATABASE_URL");
         if (envUrl != null && !envUrl.isBlank()) return envUrl.trim();
 
+        // Check for .env file in the app folder
+        Path localEnv = Paths.get(System.getProperty("user.dir"), ".env");
+        String localUrl = readUrlFromFile(localEnv);
+        if (localUrl != null) return localUrl;
+
         Path config = getDatabaseUrlFile();
         if (Files.isRegularFile(config)) {
-            try {
-                for (String line : Files.readAllLines(config, StandardCharsets.UTF_8)) {
-                    String trimmed = line.trim();
-                    if (!trimmed.isEmpty() && !trimmed.startsWith("#")) return trimmed;
+            return readUrlFromFile(config);
+        }
+        return null;
+    }
+
+    private static String readUrlFromFile(Path file) {
+        if (!Files.isRegularFile(file)) return null;
+        try {
+            for (String line : Files.readAllLines(file, StandardCharsets.UTF_8)) {
+                String trimmed = line.trim();
+                if (trimmed.isEmpty() || trimmed.startsWith("#")) continue;
+                if (trimmed.startsWith("DATABASE_URL=")) {
+                    trimmed = trimmed.substring("DATABASE_URL=".length()).trim();
                 }
-            } catch (Exception ignored) {
+                if (!trimmed.isEmpty()) return trimmed;
             }
+        } catch (Exception ignored) {
         }
         return null;
     }
