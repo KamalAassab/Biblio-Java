@@ -66,6 +66,12 @@ postgresql://utilisateur:motdepasse@host/neondb?sslmode=require
 
 ## Captures d'écran
 
+### Connexion
+
+![Connexion](screenshots/01-login.png)
+
+Interface de connexion sécurisée avec branding institutionnel FST Settat et accès par rôle (Admin / Lecteur).
+
 ### Tableau de bord
 
 ![Tableau de bord](screenshots/02-dashboard.png)

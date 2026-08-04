@@ -123,19 +123,29 @@ public final class Theme {
     }
 
     static class ScrollUI extends BasicScrollBarUI {
+        @Override
+        public void installUI(JComponent c) {
+            super.installUI(c);
+            if (this.decrButton == null) this.decrButton = createDecreaseButton(NORTH);
+            if (this.incrButton == null) this.incrButton = createIncreaseButton(SOUTH);
+        }
+
+        @Override
         protected void configureScrollBarColors() {
             this.thumbColor = new Color(150, 158, 190);
         }
 
+        @Override
         protected JButton createDecreaseButton(int o) {
             JButton b = new JButton();
-            b.setPreferredSize(new Dimension());
+            b.setPreferredSize(new Dimension(0, 0));
             return b;
         }
 
+        @Override
         protected JButton createIncreaseButton(int o) {
             JButton b = new JButton();
-            b.setPreferredSize(new Dimension());
+            b.setPreferredSize(new Dimension(0, 0));
             return b;
         }
 
