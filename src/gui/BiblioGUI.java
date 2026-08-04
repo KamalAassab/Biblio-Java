@@ -102,12 +102,10 @@ public class BiblioGUI extends JFrame {
     private JPanel buildHeader() {
         JPanel wrap = new JPanel(new BorderLayout());
         wrap.setOpaque(false);
-        wrap.setBorder(BorderFactory.createEmptyBorder(0, 0, 16, 0));
+        wrap.setBorder(BorderFactory.createEmptyBorder(4, 4, 16, 8));
 
-        RoundedPanel head = new RoundedPanel(Theme.PRIMARY, 16);
-        head.setGradient(Theme.PRIMARY, Theme.PRIMARY_2);
-        head.setLayout(new BorderLayout());
-        head.setBorder(BorderFactory.createEmptyBorder(0, 22, 0, 18));
+        JPanel head = new JPanel(new BorderLayout());
+        head.setOpaque(false);
 
         JPanel tt = new JPanel();
         tt.setOpaque(false);
@@ -123,7 +121,7 @@ public class BiblioGUI extends JFrame {
         tt.add(pageSub);
         head.add(tt, BorderLayout.WEST);
 
-        JPanel right = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 12));
+        JPanel right = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         right.setOpaque(false);
 
         headerSearch = new SearchField();
