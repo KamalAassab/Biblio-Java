@@ -7,8 +7,6 @@ import javax.swing.JScrollPane;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.FlowLayout;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -19,7 +17,7 @@ public class CatalogueView extends JPanel {
     private final Runnable onChanged;
     private final SearchField search = new SearchField();
     private final JPanel chipRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
-    private final JPanel grid = new JPanel(new FlowLayout(FlowLayout.LEFT, 24, 24));
+    private final JPanel grid = new JPanel(new WrapLayout(FlowLayout.LEFT, 20, 20));
     private final JPanel gridArea = new JPanel(new CardLayout());
     private final List<Chip> chips = new ArrayList<>();
     private ArrayList<Livre> livres = new ArrayList<>();
@@ -51,7 +49,10 @@ public class CatalogueView extends JPanel {
 
         grid.setOpaque(false);
         JScrollPane sp = new JScrollPane(grid);
+        sp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        sp.getVerticalScrollBar().setUnitIncrement(18);
         Theme.styleScroll(sp);
+
         EmptyState empty = new EmptyState("Aucun livre trouvé", "Essayez de modifier votre recherche ou vos filtres.");
         empty.setOpaque(false);
         gridArea.setOpaque(false);

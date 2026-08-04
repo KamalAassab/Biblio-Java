@@ -1,4 +1,4 @@
-# Gestion de Bibliothèque (Biblio-Java)
+# BiblioTech — Gestion de Bibliothèque (FST Settat)
 
 Application de bureau en **Java / Swing** pour gérer une bibliothèque : livres, emprunts, réservations et utilisateurs, avec persistance **PostgreSQL**.
 
@@ -6,6 +6,10 @@ Application de bureau en **Java / Swing** pour gérer une bibliothèque : livres
 
 - [ZIP Windows 64 bits](dist/Biblio-Java-Windows-x64.zip)
 - [EXE Windows 64 bits](dist/jpackage/Biblio-Java-Windows-x64/Biblio-Java-Windows-x64.exe)
+
+## Lancement direct sur PC
+
+Vous pouvez directement double-cliquer sur **`Biblio-Java.exe`** situé à la racine du projet. Ce fichier lance l'application immédiatement sans ouvrir de fenêtre de terminal / invite de commande.
 
 ## Installation Windows (mode utilisateur)
 

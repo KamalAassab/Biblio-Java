@@ -226,16 +226,11 @@ public class LoginScreen extends JFrame {
 
             int x = 74;
             int y = (int) (h * 0.18);
-            if (Logo.AVAILABLE) {
-                Logo.draw(g, x, y, 66, 66);
-            } else {
-                Theme.gradientRound(g, x, y, 62, 62, 18, Theme.PRIMARY, Theme.PRIMARY_2);
-                Icons.paint(g, Icons.Kind.BOOK, x + 18, y + 18, 26, Color.WHITE);
-            }
+            Logo.drawCard(g, x, y, 66, 18);
 
             g.setFont(Theme.TITLE_BIG);
             g.setColor(Color.WHITE);
-            g.drawString("Biblio", x, y + 128);
+            g.drawString("BiblioTech", x, y + 128);
 
             g.setFont(Theme.BODY_15);
             g.setColor(new Color(255, 255, 255, 200));
@@ -247,7 +242,7 @@ public class LoginScreen extends JFrame {
 
             g.setFont(Theme.SMALL);
             g.setColor(new Color(255, 255, 255, 120));
-            g.drawString("FST Settat · Biblio © 2026", x, h - 34);
+            g.drawString("FST Settat · BiblioTech © 2026", x, h - 34);
             g.dispose();
         }
 

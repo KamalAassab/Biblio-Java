@@ -388,15 +388,10 @@ public class BiblioGUI extends JFrame {
             Graphics2D g = (Graphics2D) g0.create();
             g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-            if (Logo.AVAILABLE) {
-                Logo.draw(g, 6, 20, 50, 50);
-            } else {
-                Theme.gradientRound(g, 4, 22, 48, 48, 15, Theme.PRIMARY, Theme.PRIMARY_2);
-                Icons.paint(g, Icons.Kind.BOOK, 17, 35, 22, Color.WHITE);
-            }
+            Logo.drawCard(g, 6, 20, 50, 14);
             g.setFont(Theme.H2);
             g.setColor(Color.WHITE);
-            g.drawString("Biblio", 68, 46);
+            g.drawString("BiblioTech", 68, 46);
             g.setFont(Theme.SMALL);
             g.setColor(new Color(255, 255, 255, 160));
             g.drawString("Bibliothèque FST Settat", 68, 64);
