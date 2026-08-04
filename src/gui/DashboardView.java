@@ -21,8 +21,8 @@ public class DashboardView extends JPanel {
     private final StatCard cDispo = new StatCard("Livres disponibles", Theme.SUCCESS, Icons.Kind.CHECK);
     private final StatCard cEmprunts = new StatCard("Emprunts en cours", Theme.AMBER, Icons.Kind.CLOCK);
     private final StatCard cResa = new StatCard("Réservations", Theme.ACCENT, Icons.Kind.BELL);
-    private final JPanel recentRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 22, 22));
-    private final JPanel quickRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 22, 10));
+    private final JPanel recentRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 16, 12));
+    private final JPanel quickRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 16, 10));
 
     public DashboardView(Utilisateur user, Runnable goCatalogue, Runnable refreshAll) {
         this.user = user;
@@ -37,6 +37,7 @@ public class DashboardView extends JPanel {
         sp.setOpaque(false);
         sp.setBorder(javax.swing.BorderFactory.createEmptyBorder());
         sp.getVerticalScrollBar().setUnitIncrement(16);
+        sp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         add(sp, BorderLayout.CENTER);
     }
 
@@ -58,8 +59,9 @@ public class DashboardView extends JPanel {
         box.add(date);
         box.add(Box.createVerticalStrut(22));
 
-        JPanel stats = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 0));
+        JPanel stats = new JPanel(new FlowLayout(FlowLayout.LEFT, 16, 0));
         stats.setOpaque(false);
+        stats.setAlignmentX(LEFT_ALIGNMENT);
         stats.add(cTotal);
         stats.add(cDispo);
         stats.add(cEmprunts);
@@ -69,11 +71,15 @@ public class DashboardView extends JPanel {
         box.add(Box.createVerticalStrut(28));
         box.add(sectionLabel("Livres récents"));
         box.add(Box.createVerticalStrut(4));
+        recentRow.setOpaque(false);
+        recentRow.setAlignmentX(LEFT_ALIGNMENT);
         box.add(recentRow);
 
         box.add(Box.createVerticalStrut(26));
         box.add(sectionLabel("Actions rapides"));
         box.add(Box.createVerticalStrut(8));
+        quickRow.setOpaque(false);
+        quickRow.setAlignmentX(LEFT_ALIGNMENT);
         box.add(quickRow);
 
         return box;
@@ -103,7 +109,7 @@ public class DashboardView extends JPanel {
         recent.sort(Comparator.comparingInt(Livre::getId).reversed());
         int n = 0;
         for (Livre l : recent) {
-            if (n++ >= 6) break;
+            if (n++ >= 4) break;
             Livre copy = l;
             recentRow.add(new BookCard(l, isAdmin, () -> {
                 if (isAdmin) BookDialog.edit(this, copy, refreshAll);
