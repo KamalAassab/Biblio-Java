@@ -18,41 +18,50 @@ import java.io.File;
 /**
  * Design tokens for the desktop client.
  *
- * <p>Visual language: a warm ivory canvas carrying white, heavily rounded surfaces;
+ * <p>Visual language: a near-white canvas carrying white, heavily rounded surfaces;
  * pill navigation with soft icon chips; oversized display type; and soft, wide
  * shadows that let cards float rather than sit in boxes.
  *
- * <p>The palette stays institutional — the deep blue and academic gold are taken from
- * the official FST Settat crest ({@code assets/fsts_logo.png}). Gold plays the role of
- * the accent that marks the active surface; blue carries primary actions.
+ * <p>The palette is sampled directly from the official FST Settat crest
+ * ({@code assets/fsts_logo.png}), whose two inks are navy {@code #084888} and gold
+ * {@code #F8A808}. Everything else is a tint or shade of those two hues, so the
+ * interface introduces no colour the crest does not already contain.
+ *
+ * <p>Order of precedence: navy is primary and carries actions, active navigation and
+ * headings; gold is secondary and marks the selected or noteworthy surface; white is
+ * tertiary and carries the cards, with the canvas a barely-there navy tint so white
+ * surfaces separate from it without needing a border.
+ *
+ * <p>Kept in step with {@code web/src/app/globals.css}.
  */
 public final class Theme {
 
     private Theme() {}
 
-    // ── Brand ────────────────────────────────────────────────────────────────
-    /** FST Settat institutional blue. */
-    public static final Color PRIMARY = new Color(0x00, 0x40, 0x80);
-    public static final Color PRIMARY_2 = new Color(0x0B, 0x5A, 0xA8);
-    public static final Color PRIMARY_DARK = new Color(0x00, 0x2B, 0x57);
-    public static final Color PRIMARY_SOFT = new Color(0xE3, 0xEC, 0xF6);
-    public static final Color PRIMARY_LIGHT = new Color(0x70, 0x90, 0xB0);
-    public static final Color SECONDARY = new Color(0x3A, 0x6F, 0xA5);
+    // ── Brand: navy (primary) ────────────────────────────────────────────────
+    /** The exact navy ink of the FST Settat crest. */
+    public static final Color PRIMARY = new Color(0x08, 0x48, 0x88);
+    public static final Color PRIMARY_2 = new Color(0x14, 0x58, 0x9E);
+    public static final Color PRIMARY_DARK = new Color(0x05, 0x2C, 0x54);
+    public static final Color PRIMARY_SOFT = new Color(0xDC, 0xE8, 0xF7);
+    public static final Color PRIMARY_LIGHT = new Color(0x8D, 0xB2, 0xE0);
+    public static final Color SECONDARY = new Color(0x4A, 0x80, 0xBE);
 
-    /** Academic gold — the accent that marks the selected surface. */
-    public static final Color ACCENT = new Color(0xE9, 0xA4, 0x00);
-    public static final Color ACCENT_2 = new Color(0xF5, 0xB7, 0x2E);
-    public static final Color ACCENT_LIGHT = new Color(0xF5, 0xC1, 0x3D);
-    public static final Color ACCENT_SOFT = new Color(0xFD, 0xF0, 0xD2);
+    // ── Brand: gold (secondary) ──────────────────────────────────────────────
+    /** The exact gold ink of the crest — the accent that marks the active surface. */
+    public static final Color ACCENT = new Color(0xF8, 0xA8, 0x08);
+    public static final Color ACCENT_2 = new Color(0xFA, 0xBB, 0x2C);
+    public static final Color ACCENT_LIGHT = new Color(0xFB, 0xCF, 0x5E);
+    public static final Color ACCENT_SOFT = new Color(0xFE, 0xEF, 0xC9);
 
-    // ── Canvas & surfaces ────────────────────────────────────────────────────
-    /** Warm ivory application background. */
-    public static final Color CANVAS = new Color(0xEF, 0xEA, 0xE0);
-    /** Slightly deeper ivory for the band behind the header. */
-    public static final Color CANVAS_DEEP = new Color(0xE6, 0xE0, 0xD2);
+    // ── Canvas & surfaces (white, tertiary) ──────────────────────────────────
+    /** Application background: white cooled by a trace of the brand navy. */
+    public static final Color CANVAS = new Color(0xF1, 0xF5, 0xFA);
+    /** Slightly deeper tint for the band behind the header. */
+    public static final Color CANVAS_DEEP = new Color(0xE4, 0xEB, 0xF4);
     public static final Color SURFACE = Color.WHITE;
-    public static final Color SURFACE_SUNK = new Color(0xF7, 0xF4, 0xEE);
-    public static final Color SURFACE_CHIP = new Color(0xF2, 0xEF, 0xE8);
+    public static final Color SURFACE_SUNK = new Color(0xF7, 0xFA, 0xFD);
+    public static final Color SURFACE_CHIP = new Color(0xEE, 0xF3, 0xF9);
 
     /** Retained for compatibility with older call sites. */
     public static final Color BG = CANVAS;
@@ -61,27 +70,27 @@ public final class Theme {
     public static final Color SIDEBAR_HOVER = SURFACE_CHIP;
 
     // ── Text ─────────────────────────────────────────────────────────────────
-    public static final Color TEXT = new Color(0x15, 0x1B, 0x23);
-    public static final Color TEXT_SOFT = new Color(0x3F, 0x48, 0x54);
-    public static final Color MUTED = new Color(0x77, 0x7F, 0x8B);
-    public static final Color FAINT = new Color(0xA3, 0xA9, 0xB4);
+    public static final Color TEXT = new Color(0x10, 0x18, 0x22);
+    public static final Color TEXT_SOFT = new Color(0x38, 0x42, 0x4F);
+    public static final Color MUTED = new Color(0x6B, 0x76, 0x84);
+    public static final Color FAINT = new Color(0x9A, 0xA4, 0xB2);
     public static final Color ON_PRIMARY = Color.WHITE;
 
     // ── Lines & states ───────────────────────────────────────────────────────
-    public static final Color BORDER = new Color(0xE4, 0xDF, 0xD4);
-    public static final Color BORDER_SOFT = new Color(0xEE, 0xEA, 0xE1);
-    public static final Color DIVIDER = new Color(0xF0, 0xEC, 0xE4);
-    public static final Color FIELD = new Color(0xF6, 0xF3, 0xED);
-    public static final Color HOVER = new Color(0xF3, 0xEF, 0xE7);
+    public static final Color BORDER = new Color(0xDD, 0xE5, 0xEF);
+    public static final Color BORDER_SOFT = new Color(0xEB, 0xF1, 0xF7);
+    public static final Color DIVIDER = new Color(0xEE, 0xF3, 0xF9);
+    public static final Color FIELD = new Color(0xF4, 0xF8, 0xFC);
+    public static final Color HOVER = new Color(0xEE, 0xF3, 0xF9);
     public static final Color SELECTED = ACCENT_SOFT;
-    public static final Color FOCUS = new Color(0x8F, 0xB5, 0xDE);
+    public static final Color FOCUS = new Color(0x8D, 0xB2, 0xE0);
 
     public static final Color SUCCESS = new Color(0x1B, 0x9E, 0x5A);
-    public static final Color SUCCESS_SOFT = new Color(0xE3, 0xF5, 0xEA);
-    public static final Color DANGER = new Color(0xE0, 0x4A, 0x3F);
+    public static final Color SUCCESS_SOFT = new Color(0xE4, 0xF6, 0xEC);
+    public static final Color DANGER = new Color(0xD9, 0x3F, 0x36);
     public static final Color DANGER_SOFT = new Color(0xFD, 0xEA, 0xE8);
-    public static final Color AMBER = new Color(0xD9, 0x77, 0x06);
-    public static final Color AMBER_SOFT = new Color(0xFD, 0xF2, 0xDC);
+    public static final Color AMBER = new Color(0xB8, 0x77, 0x0A);
+    public static final Color AMBER_SOFT = new Color(0xFD, 0xF2, 0xD9);
 
     // ── Geometry ─────────────────────────────────────────────────────────────
     /**
@@ -228,7 +237,9 @@ public final class Theme {
         for (int i = spread; i > 0; i--) {
             int a = (int) (opacity * (1.0 - (double) i / (spread + 1)) / spread * 2.2);
             if (a <= 0) continue;
-            g.setColor(new Color(90, 78, 55, Math.min(a, 255)));
+            // Navy-tinted rather than neutral: a grey shadow on the pale blue canvas
+            // reads as dirt. Mirrors --shadow-card in the web client's globals.css.
+            g.setColor(new Color(8, 40, 90, Math.min(a, 255)));
             int d = clampRadius(r + i / 2, w + i * 2, h + i * 2);
             g.fill(new RoundRectangle2D.Float(x - i, y - i + yOffset, w + i * 2f, h + i * 2f, d, d));
         }

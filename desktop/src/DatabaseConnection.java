@@ -502,7 +502,10 @@ public class DatabaseConnection {
             // A database that predates it is still perfectly usable, so a failure here
             // retries without the column rather than leaving the catalogue empty.
             ArrayList<Livre> livres = selectLivres(true);
-            return livres != null ? livres : selectLivres(false);
+            if (livres == null) livres = selectLivres(false);
+            // Never null: an unreachable database must leave the views empty, not
+            // crash them. Callers iterate this without a null check.
+            return livres != null ? livres : new ArrayList<Livre>();
         });
     }
 

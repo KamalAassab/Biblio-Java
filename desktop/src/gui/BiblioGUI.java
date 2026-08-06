@@ -140,13 +140,15 @@ public class BiblioGUI extends JFrame {
             protected void paintComponent(Graphics g0) {
                 Graphics2D g = (Graphics2D) g0.create();
                 Theme.aa(g);
-                Logo.drawCard(g, 4, (getHeight() - 46) / 2, 46, 13);
+                // Bare crest on the light sidebar: no plate, no border, and larger
+                // than the old carded version so the detail actually reads.
+                Logo.draw(g, 2, (getHeight() - 56) / 2, 56);
                 g.dispose();
             }
         };
         p.setOpaque(false);
-        p.setPreferredSize(new Dimension(0, 74));
-        p.setBorder(new EmptyBorder(0, 62, 0, 0));
+        p.setPreferredSize(new Dimension(0, 78));
+        p.setBorder(new EmptyBorder(0, 66, 0, 0));
 
         JPanel text = new JPanel();
         text.setOpaque(false);

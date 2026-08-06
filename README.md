@@ -1,52 +1,62 @@
-# BiblioTech — Gestion de Bibliothèque · Library Management
+# BiblioTech — Gestion de Bibliothèque
 
 <p align="center">
-  <img src="desktop/assets/fsts_logo.png" alt="FST Settat" width="90">
+  <img src="desktop/assets/fsts_logo.png" alt="FST Settat" width="110">
 </p>
 
 <p align="center">
   <strong>Faculté des Sciences et Techniques de Settat</strong><br>
-  Conçu et développé par <a href="https://kamal-aassab.vercel.app/">Kamal Aassab</a><br>
-  <em>Designed and built by <a href="https://kamal-aassab.vercel.app/">Kamal Aassab</a></em>
+  Conçu et développé par <a href="https://kamal-aassab.vercel.app/">Kamal Aassab</a>
 </p>
 
 ---
 
-**FR** — Un seul projet, deux interfaces qui partagent la même base PostgreSQL (Neon) :
-une application **bureau Java Swing** et une **application web Next.js** déployable sur
+Un seul projet, deux interfaces qui partagent la même base PostgreSQL (Neon) : une
+application **bureau Java Swing** et une **application web Next.js** déployable sur
 Vercel. Même identité visuelle, mêmes données, mêmes comptes. Interface bilingue
-français / anglais.
-
-**EN** — One project, two interfaces sharing a single PostgreSQL (Neon) database: a
-**Java Swing desktop app** and a **Next.js web app** deployable to Vercel. Same visual
-identity, same data, same accounts. Bilingual French / English interface.
+français / anglais, commutable à tout moment.
 
 ---
 
-## ▶ Lancer l'application · Run the app
+## ▶ Lancer l'application
 
-**FR — Double-cliquez sur le fichier voulu, à la racine du projet :**
+**Double-cliquez sur le fichier voulu, à la racine du projet :**
 
 | Fichier | Ce qu'il fait |
 | --- | --- |
 | **`START-DESKTOP-APP.bat`** | Compile puis lance l'application **bureau**. C'est tout. |
 | **`START-WEB-APP.bat`** | Lance l'application **web**, puis ouvre `http://localhost:3000`. |
 
-*EN — Double-click the file you want, in the project root: `START-DESKTOP-APP.bat`
-builds and launches the desktop app; `START-WEB-APP.bat` starts the web app.*
-
 Les deux scripts **trouvent le JDK et Node tout seuls** — y compris une installation
 portable non ajoutée au `PATH` — et **laissent la fenêtre ouverte** en cas d'erreur,
 avec la marche à suivre.
 
-*Both scripts locate the JDK and Node themselves — including a portable install that is
-not on `PATH` — and keep the window open on failure, with the fix spelled out.*
-
 > Avant le premier lancement, configurez la base de données : voir
-> [Démarrage · Getting started](#démarrage--getting-started).
-> *Configure the database before the first run — see Getting started below.*
+> [Démarrage](#démarrage).
 
 macOS / Linux : `./desktop/build.sh run`
+
+---
+
+## Identité visuelle
+
+Toute la palette est **échantillonnée dans le blason de la FST Settat**
+(`desktop/assets/fsts_logo.png`). Le blason n'utilise que deux encres, reprises telles
+quelles comme jetons de design :
+
+| Rôle | Couleur | Valeur | Usage |
+| --- | --- | --- | --- |
+| **1. Primaire** | Bleu marine | `#084888` | Actions, navigation active, titres, panneau de connexion |
+| **2. Secondaire** | Or | `#F8A808` | L'accent qui marque la surface sélectionnée ou notable |
+| **3. Tertiaire** | Blanc | `#FFFFFF` | Cartes et panneaux, sur un fond `#F1F5FA` à peine teinté de bleu |
+
+Chaque autre valeur de l'interface est une teinte ou une nuance de ces deux tons :
+l'application n'introduit aucune couleur absente du blason. Les ombres elles-mêmes sont
+teintées de bleu marine plutôt que de gris neutre, pour qu'une élévation sur le fond
+clair ne paraisse jamais sale.
+
+Les deux clients partagent le même barème, à maintenir synchronisé :
+`desktop/src/gui/Theme.java` ↔ `web/src/app/globals.css`.
 
 ---
 
@@ -63,7 +73,7 @@ macOS / Linux : `./desktop/build.sh run`
 │   ├── src/                Modele, securite, i18n, couche donnees
 │   │   ├── gui/            Design system et vues
 │   │   └── Interfaces/     Stubs du sujet, exclus de la compilation
-│   ├── assets/             Logo FST + fontes Inter
+│   ├── assets/             Blason FST + fontes Inter
 │   ├── lib/                Pilote PostgreSQL + FlatLaf (.jar)
 │   ├── packaging/          Installeur Windows autonome (pas requis)
 │   ├── find-jdk.bat        Localise le JDK - appele par les scripts
@@ -75,7 +85,10 @@ macOS / Linux : `./desktop/build.sh run`
 │   ├── src/app/            App Router : pages et Route Handlers
 │   ├── src/components/     shadcn/ui + composants metier
 │   ├── src/lib/            Session, mots de passe, requetes, validation, i18n
-│   ├── scripts/seed.mjs    Migration de schema + donnees de demonstration
+│   ├── scripts/
+│   │   ├── seed.mjs        Schema, sequences, donnees de demonstration
+│   │   ├── fetch-covers.mjs  Resolution des couvertures
+│   │   └── connection.mjs  Normalisation de la chaine de connexion
 │   └── .env.local.example  Modele a copier vers .env.local
 │
 └── docs/screenshots/       Captures d'ecran
@@ -84,40 +97,98 @@ macOS / Linux : `./desktop/build.sh run`
 Les fichiers `.env` et `.env.local` contiennent les identifiants et ne sont **jamais**
 versionnés. Copiez les modèles `.example` correspondants.
 
-*The `.env` and `.env.local` files hold credentials and are never committed — copy the
-matching `.example` templates.*
-
-Les deux interfaces écrivent dans les **mêmes tables**. Les mots de passe utilisent un
-format identique (`pbkdf2$210000$sel$empreinte`), donc un compte créé côté bureau se
-connecte côté web et inversement.
-
-*Both interfaces write to the **same tables**. Passwords use an identical format, so an
-account created on the desktop signs in on the web and vice versa.*
-
-| Couche · Layer | Technologie |
+| Couche | Technologie |
 | --- | --- |
-| Bureau · Desktop | Java 17, Swing, JDBC, PBKDF2 |
+| Bureau | Java 17, Swing, JDBC, PBKDF2 |
 | Web | Next.js 16, React 19, TypeScript, Tailwind CSS 4, shadcn/ui, Framer Motion |
-| Base · Database | Neon PostgreSQL (serverless) |
-| Hébergement · Hosting | Vercel |
+| Base | Neon PostgreSQL (serverless) |
+| Hébergement | Vercel |
 
-> **Fichiers partagés à garder synchronisés · Keep these in sync**
+> **Fichiers partagés à garder synchronisés**
 > `desktop/src/Security.java` ↔ `web/src/lib/password.ts` (format de hachage),
 > `desktop/src/I18n.java` ↔ `web/src/lib/i18n.ts` (clés de traduction),
-> `desktop/src/gui/Theme.java` ↔ `web/src/app/globals.css` (jetons de design —
-> `RADIUS_*` et `--radius-*` sont les mêmes valeurs en pixels : 14 / 18 / 24 / 30 / 40).
-
-> **Syntaxe Tailwind v4** — une variable CSS s'écrit `rounded-(--radius-lg)`, avec des
-> **parenthèses**. La forme `rounded-[--radius-lg]` est celle de Tailwind v3 : elle
-> compile sans erreur mais produit une règle invalide, donc un coin parfaitement carré.
-> *Tailwind v4 uses parentheses for CSS variables; the v3 bracket form silently
-> compiles to an invalid rule and renders square.*
+> `desktop/src/gui/Theme.java` ↔ `web/src/app/globals.css` (jetons de design).
 
 ---
 
-## Démarrage · Getting started
+## Fonctionnalités
 
-### 1. Base de données · Database
+### Connexion et rôles
+
+Authentification par identifiant et mot de passe, avec deux rôles distincts.
+L'**administrateur** gère le fonds, les prêts et les comptes ; le **lecteur** consulte
+le catalogue et son propre dossier. Le rôle est vérifié à chaque route et à chaque page,
+jamais seulement à l'affichage : masquer un bouton ne protège rien.
+
+La limitation des tentatives est **par identifiant**, avec temporisation exponentielle.
+Un attaquant qui cible un compte ne peut donc pas bloquer les autres utilisateurs.
+
+### Tableau de bord
+
+Quatre indicateurs — livres au catalogue, exemplaires disponibles, emprunts en cours,
+réservations — accompagnés du nombre de retards. En dessous, les ajouts récents au fonds
+et des actions rapides vers les tâches courantes.
+
+### Catalogue
+
+Le fonds complet, en grille de cartes. Recherche instantanée par titre, auteur ou genre ;
+filtre par catégorie ; filtre par disponibilité (tous / disponibles / empruntés).
+L'administrateur peut ajouter, modifier et supprimer un ouvrage.
+
+**Couvertures réelles.** Le catalogue stocke une URL de couverture par livre, résolue par
+`npm run db:covers` depuis Open Library, avec repli sur Google Books. Chaque candidat est
+vérifié contre le titre et l'auteur locaux avant d'être accepté — une recherche sur
+« Antigone » renvoie sinon volontiers une édition sans rapport. Sur les 160 ouvrages du
+fonds, **148 obtiennent une couverture**.
+
+C'est une *URL* qui est stockée, jamais l'image : les couvertures sont protégées par le
+droit d'auteur et les deux services les diffusent précisément pour l'affichage en
+catalogue. Le dépôt reste donc exempt d'illustrations redistribuées. Un livre sans
+correspondance conserve sa **couverture générée** — un dégradé déduit du genre, ou à
+défaut du hachage du titre, avec le titre et l'auteur composés dessus. Cette couverture
+générée sert aussi de repli si le chargement échoue : une URL morte n'affiche jamais une
+image cassée.
+
+Côté bureau, `CoverCache` télécharge sur un pool de threads en arrière-plan, avec un cache
+mémoire et un cache disque : le fil d'événements Swing ne bloque jamais, et un redémarrage
+ne retélécharge pas toute l'étagère.
+
+### Emprunts
+
+Le registre des prêts : lecteur, ouvrage, date d'emprunt, retour prévu et statut. Le
+statut est calculé à l'affichage et distingue **en cours**, **échéance aujourd'hui**,
+**échéance proche** et **en retard**, avec le nombre exact de jours. L'enregistrement d'un
+retour se fait en un clic.
+
+Emprunts et retours s'exécutent dans une **transaction avec verrouillage de ligne**, pour
+qu'un même exemplaire ne puisse pas être prêté deux fois par deux clients simultanés.
+
+### Réservations
+
+Les demandes des lecteurs, avec leur date, du plus récent au plus ancien. Création et
+annulation par l'administrateur.
+
+### Utilisateurs
+
+L'annuaire des comptes : nom, adresse électronique, numéro et rôle. Création, modification
+de rôle et suppression réservées à l'administrateur. Un index unique sur `LOWER(nom)`
+garantit un identifiant, un compte.
+
+### Profil
+
+Coordonnées de l'utilisateur connecté et changement de mot de passe, avec vérification du
+mot de passe actuel.
+
+### Bilingue
+
+Français et anglais, commutables à tout moment depuis la barre latérale. Le choix est
+mémorisé d'une session à l'autre. Les deux clients partagent les mêmes clés de traduction.
+
+---
+
+## Démarrage
+
+### 1. Base de données
 
 Créez un projet sur [Neon](https://console.neon.tech), puis :
 
@@ -140,22 +211,23 @@ npm install
 npm run db:seed
 ```
 
-Récupérer les couvertures réelles (une seule fois, ~2 min pour 160 livres) :
+`db:seed` est idempotent : il crée le schéma, **attache une séquence à chaque clé
+primaire**, applique les migrations et laisse les données existantes intactes.
+
+Pour ajouter les dix scénarios de prêt de démonstration à un registre déjà peuplé :
 
 ```bash
-npm run db:covers
+npm run db:seed -- --scenarios
 ```
 
-Le script interroge Open Library puis Google Books, vérifie que le titre **et**
-l'auteur correspondent avant d'accepter une image, et stocke une **URL** dans
-`livre.image_url` — aucune illustration n'est copiée dans le dépôt. Les livres sans
-correspondance gardent la couverture générée (dégradé + titre), côté bureau comme côté
-web. `npm run db:covers -- --all` force une nouvelle résolution.
+Pour résoudre les couvertures :
 
-*Fetches real cover art once. It stores a URL rather than copying artwork into the
-repository, and any book without a match keeps its generated cover.*
+```bash
+npm run db:covers        # seulement les livres sans couverture
+npm run db:covers -- --all   # tout re-résoudre
+```
 
-### 2. Bureau · Desktop
+### 2. Bureau
 
 Double-cliquez **`START-DESKTOP-APP.bat`**. En ligne de commande :
 
@@ -164,10 +236,15 @@ desktop\run.bat          # Windows — compile puis lance
 ./desktop/build.sh run   # macOS / Linux
 ```
 
-Les scripts fonctionnent depuis n'importe quel dossier. Le JDK est recherché dans
-`JAVA_HOME`, puis sur le `PATH`, puis dans les emplacements d'installation courants — y
-compris une archive décompressée manuellement (`desktop\find-jdk.bat`). Si rien n'est
-trouvé, le script explique comment installer Temurin 17 ou définir `JAVA_HOME`.
+Le JDK est recherché dans `JAVA_HOME`, puis sur le `PATH`, puis dans les emplacements
+d'installation courants — y compris une archive décompressée manuellement
+(`desktop\find-jdk.bat`). Si rien n'est trouvé, le script explique comment installer
+Temurin 17 ou définir `JAVA_HOME`.
+
+> Le client bureau se connecte à Neon en **TCP direct sur le port 5432**. Derrière un
+> proxy d'entreprise qui filtre ce port, la connexion échoue et les vues restent vides —
+> l'application démarre normalement, mais sans données. Le client web n'a pas ce
+> problème : il passe par le pilote *serverless* de Neon, en HTTPS.
 
 ### 3. Web
 
@@ -182,12 +259,38 @@ npm run build        # build de production
 
 ---
 
-## Déploiement Vercel · Vercel deployment
+## Jeu de démonstration
+
+`npm run db:seed -- --scenarios` crée dix situations de prêt couvrant chaque état que
+l'interface rend différemment. Toutes les dates sont **relatives au jour d'exécution** :
+« en retard de trois jours » le reste quand la démonstration est ouverte des mois plus
+tard, au lieu de dériver dans le passé.
+
+| # | Scénario | État affiché |
+| --- | --- | --- |
+| 1 | Ouvert aujourd'hui, période complète restante | Dans 14 jours |
+| 2 | En cours, une semaine restante | Dans 7 jours |
+| 3 | Échéance demain | Dans 1 jour |
+| 4 | Échéance aujourd'hui | Aujourd'hui |
+| 5 | En retard de 3 jours | 3 jours de retard |
+| 6 | En retard de 5 semaines | 35 jours de retard |
+| 7 | Rendu une semaine en avance | Rendu |
+| 8 | Rendu le jour même de l'échéance | Rendu |
+| 9 | Rendu avec 8 jours de retard | Rendu |
+| 10 | Prêt historique clos, semestre précédent | Rendu |
+
+S'y ajoutent huit réservations réparties sur les trois dernières semaines et quatre
+lecteurs supplémentaires, pour que le registre ne soit pas un seul nom répété dix fois.
+
+Les scénarios ne s'attachent qu'à des ouvrages **sans prêt ouvert** — c'est le registre
+qui fait foi, pas l'indicateur `disponibilite`, qui est dénormalisé et peut être périmé.
+
+---
+
+## Déploiement Vercel
 
 1. **Créez une branche Neon dédiée à la démo.** Ne pointez jamais le déploiement public
    vers votre base principale.
-   *Create a dedicated Neon branch for the demo — never point the public deployment at
-   your main database.*
 
 2. **Importez le dépôt sur Vercel** et réglez **Root Directory** sur `web`.
 
@@ -212,7 +315,7 @@ ni voir leur mot de passe modifié — le lien public reste fonctionnel dans la 
 
 ---
 
-## Sécurité · Security
+## Sécurité
 
 ### Secrets
 
@@ -228,8 +331,7 @@ ni voir leur mot de passe modifié — le lien public reste fonctionnel dans la 
   cryptographique qu'un mot de passe erroné, pour ne pas révéler quels comptes existent.
 - Les anciennes lignes en clair sont **migrées automatiquement** à la première connexion
   réussie de leur propriétaire.
-- Limitation des tentatives avec temporisation exponentielle **par identifiant** — un
-  attaquant ciblant un compte ne peut pas bloquer les autres utilisateurs.
+- Limitation des tentatives avec temporisation exponentielle **par identifiant**.
 
 ### Web
 
@@ -245,6 +347,10 @@ ni voir leur mot de passe modifié — le lien public reste fonctionnel dans la 
 | Redirections | `?next=` restreint aux chemins internes (pas de redirection ouverte) |
 | Indexation | `robots: noindex` sur la démo |
 
+La politique CSP n'autorise que deux hôtes tiers, et uniquement pour les images :
+`covers.openlibrary.org` et `books.google.com`, nommés explicitement plutôt que par
+joker. Les couvertures sont le seul contenu externe chargé par l'application.
+
 > **Note honnête sur le limiteur de débit** — il est en mémoire, donc son périmètre est
 > l'instance serverless, pas le déploiement entier. C'est le bon compromis pour une
 > démonstration ; une mise en production sous trafic réel devrait le déplacer vers
@@ -259,52 +365,50 @@ ni voir leur mot de passe modifié — le lien public reste fonctionnel dans la 
 - TLS forcé (`sslmode=require`), même si l'URL fournie demande autre chose.
 - Contraintes de clés étrangères avec `ON DELETE CASCADE`.
 - Index unique sur `LOWER(nom)` — un identifiant, un compte.
-- Identifiants générés par séquences PostgreSQL, remplaçant l'ancien `MAX(id) + 1` qui
-  perdait silencieusement des écritures concurrentes.
-- Emprunts et retours en **transaction** avec verrouillage de ligne, pour qu'un même
-  exemplaire ne puisse pas être prêté deux fois.
+- Identifiants générés par **séquences PostgreSQL**, remplaçant l'ancien `MAX(id) + 1`
+  qui perdait silencieusement des écritures concurrentes. Les deux clients installent ces
+  séquences : le client bureau à la connexion, `npm run db:seed` côté web — une base que
+  l'application Java n'a jamais atteinte est ainsi utilisable malgré tout.
+- Emprunts et retours en **transaction** avec verrouillage de ligne.
 
 ---
 
-## Fonctionnalités · Features
+## Captures d'écran
 
-| Section | FR | EN |
-| --- | --- | --- |
-| Connexion | Authentification par rôle, comptes de démonstration | Role-based sign-in, demo accounts |
-| Tableau de bord | Indicateurs, ajouts récents, actions rapides | Metrics, recent additions, quick actions |
-| Catalogue | Recherche, filtres par catégorie et disponibilité | Search, category and availability filters |
-| Emprunts | Suivi des prêts, retards, enregistrement des retours | Loan tracking, overdue flags, returns |
-| Réservations | Demandes des lecteurs | Reader requests |
-| Utilisateurs | Annuaire, rôles, suppression (admin) | Directory, roles, deletion (admin) |
-| Profil | Coordonnées et changement de mot de passe | Details and password change |
+> Les captures ci-dessous ont été prises **avant** la reprise de la palette et
+> l'ajout des scénarios de démonstration : elles montrent l'ancien fond ivoire.
+> Pour les régénérer, depuis une machine dont l'accès au port 5432 n'est pas filtré :
+>
+> ```bash
+> desktop\build.bat
+> cd desktop && java -cp "out;lib\postgresql-42.7.4.jar;lib\flatlaf-3.5.4.jar" GenerateScreenshots
+> ```
+>
+> Les sept fichiers de `docs/screenshots/` sont réécrits en place.
 
-Les deux interfaces basculent entre français et anglais à tout moment ; le choix est
-mémorisé d'une session à l'autre.
-
----
-
-## Captures d'écran · Screenshots
-
-| | |
+| Capture | Ce qu'elle montre |
 | --- | --- |
-| ![Connexion](docs/screenshots/01-login.png) | ![Tableau de bord](docs/screenshots/02-dashboard.png) |
-| **Connexion** — identité institutionnelle et accès par rôle | **Tableau de bord** — indicateurs et ajouts récents |
-| ![Catalogue](docs/screenshots/03-catalogue.png) | ![Emprunts](docs/screenshots/04-emprunts.png) |
-| **Catalogue** — recherche et filtres | **Emprunts** — suivi des prêts et des retards |
-| ![Réservations](docs/screenshots/05-reservations.png) | ![Profil](docs/screenshots/07-profile.png) |
-| **Réservations** — demandes des lecteurs | **Profil** — informations et mot de passe |
+| ![Connexion](docs/screenshots/01-login.png) | **Connexion** — panneau institutionnel à gauche, formulaire à droite. Le blason est posé sur une plaque blanche : c'est le seul endroit où elle subsiste, le panneau étant bleu marine comme l'encre du blason lui-même. Les comptes de démonstration sont rappelés en bas. |
+| ![Tableau de bord](docs/screenshots/02-dashboard.png) | **Tableau de bord** — les quatre indicateurs en haut, le nombre de retards en légende, puis les ajouts récents au fonds et les actions rapides. |
+| ![Catalogue](docs/screenshots/03-catalogue.png) | **Catalogue** — la grille de couvertures, la recherche instantanée, le filtre par catégorie et les trois onglets de disponibilité. Chaque carte porte le titre, l'auteur, l'état et le genre. |
+| ![Emprunts](docs/screenshots/04-emprunts.png) | **Emprunts** — le registre des prêts. La colonne statut distingue les prêts en cours, l'échéance du jour et les retards, en indiquant le nombre exact de jours ; le bouton de retour clôt le prêt en un clic. |
+| ![Réservations](docs/screenshots/05-reservations.png) | **Réservations** — les demandes des lecteurs, les plus récentes en tête, avec leur date et le lecteur concerné. |
+| ![Utilisateurs](docs/screenshots/06-utilisateurs.png) | **Utilisateurs** — l'annuaire des comptes avec nom, adresse, numéro et rôle. Les actions de modification et de suppression sont réservées à l'administrateur. |
+| ![Profil](docs/screenshots/07-profile.png) | **Profil** — les coordonnées du compte connecté et le formulaire de changement de mot de passe. |
 
 ---
 
-## Comptes de démonstration · Demo accounts
+## Comptes de démonstration
 
-| Rôle · Role | Identifiant · Username | Mot de passe · Password |
+| Rôle | Identifiant | Mot de passe |
 | --- | --- | --- |
-| Administrateur · Administrator | `admin` | `admin123` |
-| Lecteur · Reader | `lecteur` | `lecteur123` |
+| Administrateur | `admin` | `admin123` |
+| Lecteur | `lecteur` | `lecteur123` |
+
+Le jeu de démonstration ajoute quatre lecteurs supplémentaires — Salma Bennani,
+Youssef El Amrani, Nadia Cherkaoui et Omar Tazi — tous avec le mot de passe `lecteur123`.
 
 > Ces identifiants sont destinés à la démonstration. Changez-les avant tout usage réel.
-> *These credentials are for demonstration only. Change them before any real use.*
 
 ---
 

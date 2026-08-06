@@ -18,6 +18,13 @@ const pbkdf2Async = promisify(pbkdf2);
 
 const sql = connect("db:seed");
 
+/**
+ * Append the ten demo loan scenarios even when the register already has rows.
+ *   npm run db:seed -- --scenarios
+ * Without it, an existing register is left untouched.
+ */
+const SEED_SCENARIOS = process.argv.includes("--scenarios");
+
 // Must match src/lib/password.ts and Security.java.
 const ITERATIONS = 210_000;
 
@@ -89,6 +96,87 @@ const BOOKS = [
    "Emma Bovary cherche dans les romans une vie que sa province ne lui donnera jamais, et s'y perd.", true],
 ];
 
+/** Primary keys that need a sequence attached. Mirrors `installSequences` in
+ *  DatabaseConnection.java — see `ensureSequences` below for why both exist. */
+const PRIMARY_KEYS = [
+  ["livre", "id_livre"],
+  ["utilisateur", "id_utilisateur"],
+  ["admin", "id_admin"],
+  ["lecteur", "id_lecteur"],
+  ["emprunt", "id_emprunt"],
+  ["reservation", "id_reservation"],
+];
+
+/**
+ * Gives every primary key a sequence default.
+ *
+ * The original coursework schema declared plain INTEGER keys and generated ids with
+ * `MAX(id) + 1`, which loses writes under concurrency. The desktop client repairs this
+ * on connect, but a database the desktop client has never reached still has bare
+ * columns with no default — and then *every* insert from the web app fails with a
+ * not-null violation on the id. Seeding must not depend on the Java app having been
+ * run first, so the same repair happens here.
+ *
+ * `setval(…, max + 1, false)` makes the next `nextval` return exactly max + 1, so
+ * existing rows keep their ids.
+ */
+async function ensureSequences() {
+  for (const [table, column] of PRIMARY_KEYS) {
+    const sequence = `${table}_${column}_seq`;
+    try {
+      await sql.query(`CREATE SEQUENCE IF NOT EXISTS ${sequence}`);
+      await sql.query(
+        `SELECT setval('${sequence}', COALESCE((SELECT MAX(${column}) FROM ${table}), 0) + 1, false)`,
+      );
+      await sql.query(
+        `ALTER TABLE ${table} ALTER COLUMN ${column} SET DEFAULT nextval('${sequence}')`,
+      );
+      await sql.query(`ALTER SEQUENCE ${sequence} OWNED BY ${table}.${column}`);
+    } catch (error) {
+      console.warn(`  could not attach a sequence to ${table}.${column}: ${error.message}`);
+    }
+  }
+}
+
+/** Readers beyond the two demo accounts, so the register shows a range of names. */
+const EXTRA_READERS = [
+  ["Salma Bennani", "salma.bennani@fsts.ac.ma", 661234501],
+  ["Youssef El Amrani", "youssef.elamrani@fsts.ac.ma", 661234502],
+  ["Nadia Cherkaoui", "nadia.cherkaoui@fsts.ac.ma", 661234503],
+  ["Omar Tazi", "omar.tazi@fsts.ac.ma", 661234504],
+];
+
+/**
+ * The ten loan situations, as day offsets from the day the seed runs.
+ *
+ * `returned: null` means the book is still out. Each row is a state the interface
+ * renders differently, so the demo exercises every badge and every filter.
+ */
+const LOAN_SCENARIOS = [
+  { label: "Opened today — full loan period remaining", borrowed: 0, due: 14, returned: null },
+  { label: "On loan — a week left", borrowed: -7, due: 7, returned: null },
+  { label: "Due tomorrow", borrowed: -13, due: 1, returned: null },
+  { label: "Due today", borrowed: -14, due: 0, returned: null },
+  { label: "Overdue by 3 days", borrowed: -17, due: -3, returned: null },
+  { label: "Overdue by 5 weeks — the worst case on the dashboard", borrowed: -49, due: -35, returned: null },
+  { label: "Returned a week early", borrowed: -20, due: -6, returned: -13 },
+  { label: "Returned exactly on the due date", borrowed: -28, due: -14, returned: -14 },
+  { label: "Returned 8 days late", borrowed: -40, due: -26, returned: -18 },
+  { label: "Closed historic loan — last term", borrowed: -120, due: -106, returned: -104 },
+];
+
+/** Reservation dates, as day offsets. A spread of recent requests. */
+const RESERVATION_OFFSETS = [0, -1, -3, -6, -10, -15, -22];
+
+/** `YYYY-MM-DD` for today shifted by `days`, in local time. */
+function dayOffset(days) {
+  const date = new Date();
+  date.setDate(date.getDate() + days);
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${date.getFullYear()}-${month}-${day}`;
+}
+
 async function main() {
   console.log("Creating schema…");
   // `sql.query` is the plain-string form; the tagged template is for parameterised
@@ -109,6 +197,9 @@ async function main() {
     }
   }
 
+  console.log("Attaching primary-key sequences…");
+  await ensureSequences();
+
   const [{ count: bookCount }] = await sql`SELECT COUNT(*)::int AS count FROM livre`;
   if (bookCount === 0) {
     console.log(`Seeding ${BOOKS.length} books…`);
@@ -122,19 +213,111 @@ async function main() {
     console.log(`Catalogue already has ${bookCount} books — leaving it alone.`);
   }
 
-  await ensureAccount("admin", "admin123", "admin@fsts.ac.ma", 612345678, "Admin");
-  await ensureAccount("lecteur", "lecteur123", "lecteur@fsts.ac.ma", 987654321, "Lecteur");
+  const adminId = await ensureAccount("admin", "admin123", "admin@fsts.ac.ma", 612345678, "Admin");
+  const lecteurId = await ensureAccount("lecteur", "lecteur123", "lecteur@fsts.ac.ma", 987654321, "Lecteur");
+
+  // Extra readers so the loan register is not a single name repeated ten times.
+  const readerIds = [];
+  for (const [nom, email, numero] of EXTRA_READERS) {
+    readerIds.push(await ensureAccount(nom, "lecteur123", email, numero, "Lecteur"));
+  }
+
+  await seedScenarios([lecteurId, ...readerIds], adminId);
 
   console.log("\nDone. Demo accounts:");
   console.log("  admin   / admin123    (administrator)");
   console.log("  lecteur / lecteur123  (reader)");
+  console.log(`  ${EXTRA_READERS.length} further readers, all with password lecteur123`);
 }
 
+/**
+ * Seeds ten loan situations and a set of reservations.
+ *
+ * Every date is relative to the day the seed runs, so "overdue by three days" stays
+ * overdue whenever the demo is opened rather than drifting into the distant past.
+ * The ten cover each state the interface renders differently: on loan, due soon, due
+ * today, mildly overdue, badly overdue, returned early, returned on time, returned
+ * late, a loan opened today, and a closed historic loan.
+ */
+async function seedScenarios(readerIds, adminId) {
+  const [{ count: loanCount }] = await sql`SELECT COUNT(*)::int AS count FROM emprunt`;
+
+  // On a register that already has rows, adding ten more silently would be rude —
+  // those rows may be someone's real testing. Appending is opt-in.
+  if (loanCount > 0 && !SEED_SCENARIOS) {
+    console.log(
+      `Register already has ${loanCount} loan(s) — leaving it alone.\n` +
+        "  Add the ten demo scenarios alongside them with: npm run db:seed -- --scenarios",
+    );
+    return;
+  }
+
+  // Only books with no open loan, so a scenario can never double-book a title.
+  //
+  // The register is the authority here, not `livre.disponibilite`: the flag is
+  // denormalised and can be stale — a book left marked available while still out is
+  // exactly the case that would otherwise be lent twice.
+  const books = await sql`
+    SELECT l.id_livre FROM livre l
+    WHERE NOT EXISTS (
+      SELECT 1 FROM emprunt e
+      WHERE e.id_livre = l.id_livre AND e.date_retour_livre IS NULL
+    )
+    ORDER BY l.id_livre
+    LIMIT ${LOAN_SCENARIOS.length}
+  `;
+  if (books.length < LOAN_SCENARIOS.length) {
+    console.warn(`Only ${books.length} available book(s) — seeding that many scenarios.`);
+  }
+
+  const total = Math.min(books.length, LOAN_SCENARIOS.length);
+  console.log(`\nSeeding ${total} loan scenarios…`);
+
+  for (let i = 0; i < total; i++) {
+    const { label, borrowed, due, returned } = LOAN_SCENARIOS[i];
+    const bookId = books[i].id_livre;
+    const readerId = readerIds[i % readerIds.length];
+
+    await sql`
+      INSERT INTO emprunt (id_utilisateur, id_livre, dateEmprunts, dateRetour, date_retour_livre)
+      VALUES (
+        ${readerId}, ${bookId},
+        ${dayOffset(borrowed)}, ${dayOffset(due)},
+        ${returned === null ? null : dayOffset(returned)}
+      )
+    `;
+
+    // A book still out on loan must not show as available.
+    await sql`
+      UPDATE livre SET disponibilite = ${returned !== null} WHERE id_livre = ${bookId}
+    `;
+    console.log(`  • ${label}`);
+  }
+
+  console.log(`\nSeeding ${RESERVATION_OFFSETS.length + 1} reservations…`);
+  for (let i = 0; i < RESERVATION_OFFSETS.length; i++) {
+    const readerId = readerIds[i % readerIds.length];
+    await sql`
+      INSERT INTO reservation (id_utilisateur, dateReservation)
+      VALUES (${readerId}, ${dayOffset(RESERVATION_OFFSETS[i])})
+    `;
+  }
+
+  // One reservation from the administrator, so the list shows both roles.
+  if (adminId) {
+    await sql`
+      INSERT INTO reservation (id_utilisateur, dateReservation)
+      VALUES (${adminId}, ${dayOffset(-2)})
+    `;
+  }
+}
+
+/** Creates the account if missing. Returns its id either way. */
 async function ensureAccount(nom, password, email, numero, role) {
   const existing = await sql`SELECT id_utilisateur FROM utilisateur WHERE LOWER(nom) = LOWER(${nom})`;
   if (existing.length > 0) {
     console.log(`Account "${nom}" already exists — leaving it alone.`);
-    return;
+    return existing[0].id_utilisateur;
   }
 
   const stored = await hash(password);
@@ -151,6 +334,7 @@ async function ensureAccount(nom, password, email, numero, role) {
     await sql`INSERT INTO lecteur (id_utilisateur) VALUES (${id})`;
   }
   console.log(`Created account "${nom}".`);
+  return id;
 }
 
 main().catch((error) => {

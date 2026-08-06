@@ -58,29 +58,42 @@ public final class Logo {
         return out;
     }
 
-    public static void draw(Graphics2D g, int x, int y, int w, int h) {
-        drawCard(g, x, y, Math.min(w, h), 14);
+    /**
+     * Draws the crest bare — no plate, no border, no padding.
+     *
+     * <p>This is the right call on any light surface. The source PNG is already
+     * transparent, so the crest sits directly on whatever is behind it and reads at
+     * its full size instead of being inset inside a card.
+     */
+    public static void draw(Graphics2D g, int x, int y, int size) {
+        if (SOURCE != null) {
+            quality(g);
+            g.drawImage(SOURCE, x, y, size, size, null);
+        } else {
+            Icons.paint(g, Icons.Kind.BOOK, x, y, size, Theme.PRIMARY);
+        }
     }
 
+    /**
+     * Draws the crest on a white plate.
+     *
+     * <p>Reserved for dark surfaces. The crest is navy and gold, so on the navy
+     * gradient used by the login panel and the dialog headers its navy strokes would
+     * disappear entirely; the plate is what keeps it legible there.
+     */
     public static void drawCard(Graphics2D g, int x, int y, int size, int radius) {
         int r = radius > 0 ? radius : 14;
-        g.setColor(new Color(0, 0, 0, 24));
-        g.fillRoundRect(x + 1, y + 2, size, size, r * 2, r * 2);
         Theme.fillRound(g, x, y, size, size, r, Color.WHITE);
 
-        if (SOURCE != null) {
-            int pad = Math.max(4, Math.round(size * 0.12f));
-            int iw = size - pad * 2;
-            int ih = size - pad * 2;
-            g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-            g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-            g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g.drawImage(SOURCE, x + pad, y + pad, iw, ih, null);
-        } else {
-            int iconSize = Math.round(size * 0.5f);
-            int ix = x + (size - iconSize) / 2;
-            int iy = y + (size - iconSize) / 2;
-            Icons.paint(g, Icons.Kind.BOOK, ix, iy, iconSize, Theme.PRIMARY);
-        }
+        // Tighter than a typical logo lockup: the crest has its own generous internal
+        // margin, so a large pad reads as a small logo floating in a big box.
+        int pad = Math.max(3, Math.round(size * 0.07f));
+        draw(g, x + pad, y + pad, size - pad * 2);
+    }
+
+    private static void quality(Graphics2D g) {
+        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     }
 }

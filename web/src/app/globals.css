@@ -3,51 +3,68 @@
 /*
  * BiblioTech design tokens.
  *
- * The palette is the FST Settat crest — institutional navy and academic gold — laid
- * over a warm ivory canvas. These values are kept in step with `Theme.java` in the
- * desktop client so the two editions read as one product.
+ * The palette is sampled directly from the FST Settat crest (`public/fsts-logo.png`):
+ * its two inks are navy #084888 and gold #f8a808, which are the 600 and 500 steps
+ * below. Every other step is a tint or shade of those two hues, so nothing in the
+ * interface introduces a colour the crest does not already contain.
+ *
+ * Order of precedence, and how it is meant to be used:
+ *   1. Navy  — primary. Actions, active navigation, headings, the login panel.
+ *   2. Gold  — secondary. The accent that marks a selected or noteworthy surface.
+ *   3. White — tertiary. Cards and panels; the canvas is the faintest navy tint so
+ *              white surfaces still separate from it without a border.
+ *
+ * These values are kept in step with `Theme.java` in the desktop client so the two
+ * editions read as one product.
  */
 
 @theme {
-  /* Brand */
-  --color-navy-50: #eef4fb;
-  --color-navy-100: #e3ecf6;
-  --color-navy-200: #c3d6ec;
-  --color-navy-400: #3a6fa5;
-  --color-navy-500: #0b5aa8;
-  --color-navy-600: #004080;
-  --color-navy-700: #002b57;
-  --color-navy-900: #0a1d36;
+  /* Brand — navy, sampled from the crest (#084888 is the exact logo ink) */
+  --color-navy-50: #eef4fc;
+  --color-navy-100: #dce8f7;
+  --color-navy-200: #b9d0ee;
+  --color-navy-300: #8db2e0;
+  --color-navy-400: #4a80be;
+  --color-navy-500: #14589e;
+  --color-navy-600: #084888;
+  --color-navy-700: #063a6e;
+  --color-navy-800: #052c54;
+  --color-navy-900: #041e3a;
 
-  --color-gold-100: #fdf0d2;
-  --color-gold-300: #f5c13d;
-  --color-gold-400: #f5b72e;
-  --color-gold-500: #e9a400;
-  --color-gold-700: #a45b0b;
+  /* Brand — gold, sampled from the crest (#f8a808 is the exact logo ink) */
+  --color-gold-50: #fff8e8;
+  --color-gold-100: #feefc9;
+  --color-gold-200: #fde29b;
+  --color-gold-300: #fbcf5e;
+  --color-gold-400: #fabb2c;
+  --color-gold-500: #f8a808;
+  --color-gold-600: #d88b04;
+  --color-gold-700: #a96a05;
 
-  /* Canvas & surfaces */
-  --color-canvas: #efeae0;
-  --color-canvas-deep: #e6e0d2;
+  /* Canvas & surfaces — white-led, cooled by a trace of navy */
+  --color-canvas: #f1f5fa;
+  --color-canvas-deep: #e4ebf4;
   --color-surface: #ffffff;
-  --color-surface-sunk: #f7f4ee;
-  --color-surface-chip: #f2efe8;
+  --color-surface-sunk: #f7fafd;
+  --color-surface-chip: #eef3f9;
 
-  /* Ink */
-  --color-ink: #151b23;
-  --color-ink-soft: #3f4854;
-  --color-ink-muted: #777f8b;
-  --color-ink-faint: #a3a9b4;
+  /* Ink — near-black, pulled toward navy rather than neutral grey */
+  --color-ink: #101822;
+  --color-ink-soft: #38424f;
+  --color-ink-muted: #6b7684;
+  --color-ink-faint: #9aa4b2;
 
   /* Lines */
-  --color-line: #e4dfd4;
-  --color-line-soft: #eeeae1;
+  --color-line: #dde5ef;
+  --color-line-soft: #ebf1f7;
 
-  /* Status */
+  /* Status. Warn is the brand gold so a due-soon badge stays on-palette; success
+     and danger are the two hues the crest cannot supply and must read instantly. */
   --color-ok: #1b9e5a;
-  --color-ok-soft: #e3f5ea;
-  --color-warn: #d97706;
-  --color-warn-soft: #fdf2dc;
-  --color-bad: #e04a3f;
+  --color-ok-soft: #e4f6ec;
+  --color-warn: #b8770a;
+  --color-warn-soft: #fdf2d9;
+  --color-bad: #d93f36;
   --color-bad-soft: #fdeae8;
 
   /* Radii — generous, matching the desktop surfaces.
@@ -60,11 +77,12 @@
   --radius-lg: 1.875rem;
   --radius-xl: 2.5rem;
 
-  /* Elevation — soft, warm-tinted, wide */
-  --shadow-card: 0 1px 2px rgb(90 78 55 / 0.06), 0 8px 24px -8px rgb(90 78 55 / 0.14);
-  --shadow-card-hover: 0 2px 4px rgb(90 78 55 / 0.08), 0 18px 40px -12px rgb(90 78 55 / 0.22);
-  --shadow-cover: 0 3px 8px rgb(20 16 10 / 0.18), 0 14px 32px -10px rgb(20 16 10 / 0.3);
-  --shadow-cover-hover: 0 6px 14px rgb(20 16 10 / 0.22), 0 26px 48px -12px rgb(20 16 10 / 0.36);
+  /* Elevation — soft and wide, tinted with the brand navy rather than neutral black
+     so a shadow on the pale canvas never reads as dirty grey. */
+  --shadow-card: 0 1px 2px rgb(8 40 90 / 0.06), 0 8px 24px -8px rgb(8 40 90 / 0.14);
+  --shadow-card-hover: 0 2px 4px rgb(8 40 90 / 0.09), 0 18px 40px -12px rgb(8 40 90 / 0.22);
+  --shadow-cover: 0 3px 8px rgb(4 22 52 / 0.18), 0 14px 32px -10px rgb(4 22 52 / 0.3);
+  --shadow-cover-hover: 0 6px 14px rgb(4 22 52 / 0.22), 0 26px 48px -12px rgb(4 22 52 / 0.36);
 
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 

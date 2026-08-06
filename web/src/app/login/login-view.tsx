@@ -89,13 +89,19 @@ export function LoginView({ demoMode }: { demoMode: boolean }) {
           <span className="absolute -bottom-24 -left-20 size-72 rounded-full bg-navy-500/40" />
 
           <div className="relative flex items-center gap-3">
-            <span className="flex size-14 items-center justify-center rounded-(--radius-sm) bg-white shadow-lg">
+            {/*
+              The one place a plate is still required: this panel is a navy gradient
+              and the crest's own ink is navy, so without a light backing its outline
+              would disappear into the background. Kept tight so it reads as the
+              crest's own margin rather than a card around it.
+            */}
+            <span className="flex size-16 items-center justify-center rounded-(--radius-sm) bg-white">
               <Image
                 src="/fsts-logo.png"
                 alt=""
-                width={38}
-                height={38}
-                className="size-[38px] object-contain"
+                width={56}
+                height={56}
+                className="size-14 object-contain"
                 priority
               />
             </span>
@@ -144,15 +150,14 @@ export function LoginView({ demoMode }: { demoMode: boolean }) {
         >
           <div className="w-full max-w-sm">
             <div className="mb-8 flex items-center gap-3 lg:hidden">
-              <span className="flex size-12 items-center justify-center rounded-(--radius-sm) bg-white shadow-(--shadow-card)">
-                <Image
-                  src="/fsts-logo.png"
-                  alt=""
-                  width={32}
-                  height={32}
-                  className="size-8 object-contain"
-                />
-              </span>
+              {/* Light surface — the transparent crest needs no plate behind it. */}
+              <Image
+                src="/fsts-logo.png"
+                alt=""
+                width={48}
+                height={48}
+                className="size-12 object-contain"
+              />
               <div>
                 <p className="text-base font-extrabold text-ink">{t("app.name")}</p>
                 <p className="text-[11px] text-ink-muted">{t("app.university.short")}</p>

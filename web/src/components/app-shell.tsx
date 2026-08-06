@@ -130,16 +130,16 @@ function SidebarBody({ user }: { user: SessionUser }) {
   return (
     <>
       <Link href="/dashboard" className="flex items-center gap-3 px-2 py-2">
-        <span className="flex size-11 shrink-0 items-center justify-center rounded-(--radius-sm) bg-white shadow-(--shadow-card)">
-          <Image
-            src="/fsts-logo.png"
-            alt=""
-            width={30}
-            height={30}
-            className="size-[30px] object-contain"
-            priority
-          />
-        </span>
+        {/* The crest is a transparent PNG on a light sidebar, so it needs no plate
+            or border — it reads at full size directly on the surface. */}
+        <Image
+          src="/fsts-logo.png"
+          alt=""
+          width={52}
+          height={52}
+          className="size-13 shrink-0 object-contain"
+          priority
+        />
         <span className="min-w-0">
           <span className="block truncate text-lg font-extrabold tracking-tight text-ink">
             {t("app.name")}
