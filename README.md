@@ -23,28 +23,69 @@ identity, same data, same accounts. Bilingual French / English interface.
 
 ---
 
+## ▶ Lancer l'application · Run the app
+
+**FR — Double-cliquez sur le fichier voulu, à la racine du projet :**
+
+| Fichier | Ce qu'il fait |
+| --- | --- |
+| **`START-DESKTOP-APP.bat`** | Compile puis lance l'application **bureau**. C'est tout. |
+| **`START-WEB-APP.bat`** | Lance l'application **web**, puis ouvre `http://localhost:3000`. |
+
+*EN — Double-click the file you want, in the project root: `START-DESKTOP-APP.bat`
+builds and launches the desktop app; `START-WEB-APP.bat` starts the web app.*
+
+Les deux scripts **trouvent le JDK et Node tout seuls** — y compris une installation
+portable non ajoutée au `PATH` — et **laissent la fenêtre ouverte** en cas d'erreur,
+avec la marche à suivre.
+
+*Both scripts locate the JDK and Node themselves — including a portable install that is
+not on `PATH` — and keep the window open on failure, with the fix spelled out.*
+
+> Avant le premier lancement, configurez la base de données : voir
+> [Démarrage · Getting started](#démarrage--getting-started).
+> *Configure the database before the first run — see Getting started below.*
+
+macOS / Linux : `./desktop/build.sh run`
+
+---
+
 ## Structure
 
 ```
 .
-├── desktop/              Application bureau — Java 17 + Swing
-│   ├── src/              Modele, securite, i18n, couche donnees
-│   │   └── gui/          Design system et vues
-│   ├── assets/           Logo FST + fontes Inter
-│   ├── lib/              Pilote PostgreSQL + FlatLaf
-│   ├── build.bat / .sh   Compilation
-│   └── run.bat           Compilation + lancement
+├── START-DESKTOP-APP.bat   <-- DOUBLE-CLIC pour l'app bureau
+├── START-WEB-APP.bat       <-- DOUBLE-CLIC pour l'app web
+├── README.md
+├── .env.example            Modele a copier vers .env
 │
-├── web/                  Application web — Next.js 16 + React 19
-│   ├── src/app/          App Router : pages et Route Handlers
-│   ├── src/components/   shadcn/ui + composants metier
-│   ├── src/lib/          Session, mots de passe, requetes, validation, i18n
-│   └── scripts/seed.mjs  Migration de schema + donnees de demonstration
+├── desktop/                Application bureau - Java 17 + Swing
+│   ├── src/                Modele, securite, i18n, couche donnees
+│   │   ├── gui/            Design system et vues
+│   │   └── Interfaces/     Stubs du sujet, exclus de la compilation
+│   ├── assets/             Logo FST + fontes Inter
+│   ├── lib/                Pilote PostgreSQL + FlatLaf (.jar)
+│   ├── packaging/          Installeur Windows autonome (pas requis)
+│   ├── find-jdk.bat        Localise le JDK - appele par les scripts
+│   ├── build.bat / .sh     Compilation seule
+│   ├── run.bat             Compilation + lancement
+│   └── out/                Classes compilees (genere, ignore par Git)
 │
-├── docs/screenshots/     Captures d'ecran
-├── .env                  Configuration bureau (ignoree par Git)
-└── .env.example          Modele a copier
+├── web/                    Application web - Next.js 16 + React 19
+│   ├── src/app/            App Router : pages et Route Handlers
+│   ├── src/components/     shadcn/ui + composants metier
+│   ├── src/lib/            Session, mots de passe, requetes, validation, i18n
+│   ├── scripts/seed.mjs    Migration de schema + donnees de demonstration
+│   └── .env.local.example  Modele a copier vers .env.local
+│
+└── docs/screenshots/       Captures d'ecran
 ```
+
+Les fichiers `.env` et `.env.local` contiennent les identifiants et ne sont **jamais**
+versionnés. Copiez les modèles `.example` correspondants.
+
+*The `.env` and `.env.local` files hold credentials and are never committed — copy the
+matching `.example` templates.*
 
 Les deux interfaces écrivent dans les **mêmes tables**. Les mots de passe utilisent un
 format identique (`pbkdf2$210000$sel$empreinte`), donc un compte créé côté bureau se
@@ -94,16 +135,21 @@ npm run db:seed
 
 ### 2. Bureau · Desktop
 
+Double-cliquez **`START-DESKTOP-APP.bat`**. En ligne de commande :
+
 ```bash
 desktop\run.bat          # Windows — compile puis lance
 ./desktop/build.sh run   # macOS / Linux
 ```
 
-Sous Windows, `desktop\Biblio-Java.exe` lance également l'application.
-Les scripts fonctionnent depuis n'importe quel dossier et détectent le JDK via
-`JAVA_HOME`, sinon `javac` / `java` du `PATH`.
+Les scripts fonctionnent depuis n'importe quel dossier. Le JDK est recherché dans
+`JAVA_HOME`, puis sur le `PATH`, puis dans les emplacements d'installation courants — y
+compris une archive décompressée manuellement (`desktop\find-jdk.bat`). Si rien n'est
+trouvé, le script explique comment installer Temurin 17 ou définir `JAVA_HOME`.
 
 ### 3. Web
+
+Double-cliquez **`START-WEB-APP.bat`**. En ligne de commande :
 
 ```bash
 cd web

@@ -1,7 +1,9 @@
 @echo off
 setlocal
 
-set "SRC=%~dp0dist\jpackage\Biblio-Java-Windows-x64"
+REM This script lives in desktop\packaging\, so the jpackage output tree
+REM sits one level up, in desktop\dist\ (build output, not in Git).
+set "SRC=%~dp0..\dist\jpackage\Biblio-Java-Windows-x64"
 set "DEST=%LOCALAPPDATA%\Programs\Biblio-Java"
 set "CFGDIR=%LOCALAPPDATA%\Biblio-Java"
 set "CFGFILE=%CFGDIR%\database.url"
