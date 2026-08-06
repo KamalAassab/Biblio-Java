@@ -65,7 +65,7 @@ export function ReservationsView({
         }
       />
 
-      <div className="overflow-hidden rounded-[--radius-lg] border border-line-soft bg-surface shadow-[--shadow-card]">
+      <div className="overflow-hidden rounded-(--radius-lg) border border-line-soft bg-surface shadow-(--shadow-card)">
         {reservations.length === 0 ? (
           <EmptyState
             icon={BookMarked}

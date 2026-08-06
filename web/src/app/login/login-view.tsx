@@ -83,13 +83,13 @@ export function LoginView({ demoMode }: { demoMode: boolean }) {
           initial={{ opacity: 0, x: -16 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-          className="relative hidden overflow-hidden rounded-[--radius-xl] bg-gradient-to-br from-navy-700 to-navy-600 p-10 lg:flex lg:flex-col"
+          className="relative hidden overflow-hidden rounded-(--radius-xl) bg-gradient-to-br from-navy-700 to-navy-600 p-10 lg:flex lg:flex-col"
         >
           <span className="absolute -right-16 -top-24 size-72 rounded-full bg-gold-500/25" />
           <span className="absolute -bottom-24 -left-20 size-72 rounded-full bg-navy-500/40" />
 
           <div className="relative flex items-center gap-3">
-            <span className="flex size-14 items-center justify-center rounded-[--radius-sm] bg-white shadow-lg">
+            <span className="flex size-14 items-center justify-center rounded-(--radius-sm) bg-white shadow-lg">
               <Image
                 src="/fsts-logo.png"
                 alt=""
@@ -112,7 +112,7 @@ export function LoginView({ demoMode }: { demoMode: boolean }) {
             <p className="mt-5 text-sm leading-relaxed text-white/80">{t("login.hero.sub")}</p>
           </div>
 
-          <div className="relative rounded-[--radius-md] bg-white/12 p-5 backdrop-blur-sm">
+          <div className="relative rounded-(--radius-md) bg-white/12 p-5 backdrop-blur-sm">
             <p className="text-[10px] font-semibold uppercase tracking-wider text-white/65">
               {t("login.demo.title")}
             </p>
@@ -140,11 +140,11 @@ export function LoginView({ demoMode }: { demoMode: boolean }) {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.45, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-          className="flex items-center justify-center rounded-[--radius-xl] bg-surface px-5 py-10 shadow-[--shadow-card] lg:bg-transparent lg:shadow-none"
+          className="flex items-center justify-center rounded-(--radius-xl) bg-surface px-5 py-10 shadow-(--shadow-card) lg:bg-transparent lg:shadow-none"
         >
           <div className="w-full max-w-sm">
             <div className="mb-8 flex items-center gap-3 lg:hidden">
-              <span className="flex size-12 items-center justify-center rounded-[--radius-sm] bg-white shadow-[--shadow-card]">
+              <span className="flex size-12 items-center justify-center rounded-(--radius-sm) bg-white shadow-(--shadow-card)">
                 <Image
                   src="/fsts-logo.png"
                   alt=""
@@ -203,7 +203,7 @@ export function LoginView({ demoMode }: { demoMode: boolean }) {
             </form>
 
             {demoMode && (
-              <p className="mt-6 rounded-[--radius-sm] bg-gold-100 p-3 text-[11px] leading-relaxed text-gold-700">
+              <p className="mt-6 rounded-(--radius-sm) bg-gold-100 p-3 text-[11px] leading-relaxed text-gold-700">
                 {t("demo.banner")}
               </p>
             )}

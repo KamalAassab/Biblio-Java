@@ -124,11 +124,11 @@ export function StatCard({
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: index * 0.06, ease: [0.22, 1, 0.36, 1] }}
-      className="rounded-[--radius-lg] border border-line-soft bg-surface p-6 shadow-[--shadow-card]"
+      className="rounded-(--radius-lg) border border-line-soft bg-surface p-6 shadow-(--shadow-card)"
     >
       <div className="flex items-start justify-between gap-4">
         <p className="text-4xl font-extrabold leading-none tracking-tight text-ink">{shown}</p>
-        <span className={cn("flex size-11 items-center justify-center rounded-[--radius-sm]", tones[tone])}>
+        <span className={cn("flex size-11 items-center justify-center rounded-(--radius-sm)", tones[tone])}>
           <Icon className="size-5" aria-hidden />
         </span>
       </div>
@@ -204,11 +204,11 @@ export function ActionCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: 0.1 + index * 0.06, ease: [0.22, 1, 0.36, 1] }}
       whileHover={{ y: -3 }}
-      className="group rounded-[--radius-lg] border border-line-soft bg-surface p-5 text-left
-                 shadow-[--shadow-card] transition-shadow duration-300 hover:shadow-[--shadow-card-hover]
+      className="group rounded-(--radius-lg) border border-line-soft bg-surface p-5 text-left
+                 shadow-(--shadow-card) transition-shadow duration-300 hover:shadow-(--shadow-card-hover)
                  focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-600"
     >
-      <span className={cn("flex size-11 items-center justify-center rounded-[--radius-sm]", tones[tone])}>
+      <span className={cn("flex size-11 items-center justify-center rounded-(--radius-sm)", tones[tone])}>
         <Icon className="size-5" aria-hidden />
       </span>
       <p className="mt-4 text-sm font-bold text-ink">{title}</p>

@@ -17,6 +17,12 @@ export interface Book {
   genre: string | null;
   resume: string | null;
   disponibilite: boolean;
+  /**
+   * Cover artwork, resolved by `npm run db:covers` and served by Open Library or
+   * Google Books. Null when no match was found — the clients then draw the
+   * generated gradient cover instead.
+   */
+  imageUrl: string | null;
 }
 
 export interface Member {
@@ -58,7 +64,8 @@ export interface Stats {
 
 export async function listBooks(): Promise<Book[]> {
   const rows = await sql`
-    SELECT id_livre, titre, auteur, genre, resume_livre, COALESCE(disponibilite, TRUE) AS dispo
+    SELECT id_livre, titre, auteur, genre, resume_livre, image_url,
+           COALESCE(disponibilite, TRUE) AS dispo
     FROM livre
     ORDER BY id_livre DESC
   `;
@@ -67,7 +74,8 @@ export async function listBooks(): Promise<Book[]> {
 
 export async function getBook(id: number): Promise<Book | null> {
   const rows = await sql`
-    SELECT id_livre, titre, auteur, genre, resume_livre, COALESCE(disponibilite, TRUE) AS dispo
+    SELECT id_livre, titre, auteur, genre, resume_livre, image_url,
+           COALESCE(disponibilite, TRUE) AS dispo
     FROM livre WHERE id_livre = ${id}
   `;
   return rows.length ? toBook(rows[0]) : null;
@@ -359,6 +367,7 @@ function toBook(row: Record<string, unknown>): Book {
     genre: (row.genre as string) ?? null,
     resume: (row.resume_livre as string) ?? null,
     disponibilite: Boolean(row.dispo ?? row.disponibilite ?? true),
+    imageUrl: (row.image_url as string) || null,
   };
 }
 

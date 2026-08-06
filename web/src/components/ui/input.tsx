@@ -16,7 +16,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         ref={ref}
         aria-invalid={invalid || undefined}
         className={cn(
-          "h-13 w-full rounded-[--radius-sm] border bg-surface-sunk px-4 text-sm text-ink",
+          "h-13 w-full rounded-(--radius-sm) border bg-surface-sunk px-4 text-sm text-ink",
           "transition-colors duration-200 placeholder:text-ink-faint",
           "focus:border-navy-600 focus:bg-surface focus:outline-none",
           "disabled:cursor-not-allowed disabled:opacity-60",
@@ -49,7 +49,7 @@ export const Textarea = React.forwardRef<
     ref={ref}
     aria-invalid={invalid || undefined}
     className={cn(
-      "min-h-28 w-full rounded-[--radius-sm] border bg-surface-sunk p-4 text-sm text-ink",
+      "min-h-28 w-full rounded-(--radius-sm) border bg-surface-sunk p-4 text-sm text-ink",
       "transition-colors duration-200 placeholder:text-ink-faint",
       "focus:border-navy-600 focus:bg-surface focus:outline-none",
       invalid ? "border-bad bg-bad-soft" : "border-line",

@@ -32,12 +32,17 @@ export function BookCard({
       // Stagger capped so a large catalogue does not take seconds to finish appearing.
       transition={{ duration: 0.35, delay: Math.min(index * 0.03, 0.4), ease: [0.22, 1, 0.36, 1] }}
       whileHover={{ y: -4 }}
-      className="group flex w-full flex-col rounded-[--radius-lg] border border-line-soft bg-surface p-4 text-left
-                 shadow-[--shadow-card] transition-shadow duration-300 hover:shadow-[--shadow-card-hover]
+      className="group flex w-full flex-col rounded-(--radius-lg) border border-line-soft bg-surface p-4 text-left
+                 shadow-(--shadow-card) transition-shadow duration-300 hover:shadow-(--shadow-card-hover)
                  focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-600"
       aria-label={`${book.titre} — ${book.auteur}`}
     >
-      <BookCover title={book.titre} author={book.auteur} genre={book.genre} />
+      <BookCover
+        title={book.titre}
+        author={book.auteur}
+        genre={book.genre}
+        imageUrl={book.imageUrl}
+      />
 
       <div className="mt-4 flex min-h-[2.6rem] items-start">
         <h3 className="line-clamp-2 text-sm font-bold leading-snug text-ink">{book.titre}</h3>

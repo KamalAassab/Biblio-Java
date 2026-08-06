@@ -85,7 +85,7 @@ export function Avatar({
 export function Skeleton({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cn("animate-pulse rounded-[--radius-sm] bg-surface-chip", className)}
+      className={cn("animate-pulse rounded-(--radius-sm) bg-surface-chip", className)}
       {...props}
     />
   );

@@ -68,7 +68,10 @@ function applySecurityHeaders(response: NextResponse): NextResponse {
       "default-src 'self'",
       `script-src ${scriptSrc}`,
       "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' data: blob:",
+      // Cover artwork is hotlinked from the two catalogue sources that `db:covers`
+      // resolves against, named explicitly rather than allowed by wildcard. Images
+      // are the only third-party content the app loads.
+      "img-src 'self' data: blob: https://covers.openlibrary.org https://books.google.com https://books.googleusercontent.com",
       "font-src 'self' data:",
       // The app talks only to its own origin; no third-party analytics or CDNs.
       "connect-src 'self'",

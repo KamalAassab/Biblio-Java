@@ -3,7 +3,9 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.GradientPaint;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.geom.RoundRectangle2D;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,25 +32,50 @@ public final class BookCover {
         return Math.round(width * ASPECT);
     }
 
-    public static void paint(Graphics2D g0, int x, int y, int w, int h, Livre livre, float lift) {
+    /**
+     * Paints the cover.
+     *
+     * <p>{@code onArtworkLoaded} is invoked on the event thread when a cover that was
+     * not yet cached finishes downloading; the caller should repaint. Pass null when
+     * repainting is not possible (a one-shot render), and the generated cover is used.
+     */
+    public static void paint(Graphics2D g0, int x, int y, int w, int h, Livre livre, float lift,
+                             Runnable onArtworkLoaded) {
         Graphics2D g = (Graphics2D) g0.create();
         Theme.aa(g);
 
         String title = livre.getTitre() == null ? "" : livre.getTitre();
         String author = livre.getAuteur() == null ? "" : livre.getAuteur();
         Color[] grad = Theme.coverGradient(title, livre.getGenre());
-        int radius = Math.max(6, Math.round(w * 0.055f));
+        // Proportional so a thumbnail and the large dialog cover look like the same
+        // object; ~18px at the catalogue's card width, which is Theme.RADIUS_SM and
+        // matches `rounded-[--radius-sm]` on the web cover.
+        int radius = Math.max(8, Math.round(w * 0.072f));
 
         // Drop shadow, deepening as the cover lifts.
         Theme.shadow(g, x, y, w, h, radius,
                 Math.round(9 + 7 * lift), Math.round(5 + 5 * lift), Math.round(34 + 18 * lift));
 
         RoundRectangle2D shape = new RoundRectangle2D.Float(x, y, w, h, radius * 2f, radius * 2f);
+        // The gradient is painted first either way: it is what shows through in the
+        // moment between the card appearing and the artwork arriving.
         g.setPaint(new GradientPaint(x, y, grad[1], x + w * 0.6f, y + h, grad[0]));
         g.fill(shape);
 
         java.awt.Shape clip = g.getClip();
         g.clip(shape);
+
+        BufferedImage artwork = CoverCache.get(livre.getImageUrl(), onArtworkLoaded);
+        if (artwork != null) {
+            paintArtwork(g, artwork, x, y, w, h);
+            g.setClip(clip);
+            // Hairline edge so the cover separates from a white card behind it.
+            g.setColor(Theme.alpha(Color.BLACK, 28));
+            g.draw(new RoundRectangle2D.Float(x + 0.5f, y + 0.5f, w - 1f, h - 1f,
+                    radius * 2f, radius * 2f));
+            g.dispose();
+            return;
+        }
 
         // Spine: a darker band with a bright rule, the strongest cue that this is a book.
         int spine = Math.max(5, Math.round(w * 0.085f));
@@ -106,6 +133,44 @@ public final class BookCover {
                 radius * 2f, radius * 2f));
 
         g.dispose();
+    }
+
+    /** Overload for callers that cannot repaint; always draws the generated cover. */
+    public static void paint(Graphics2D g, int x, int y, int w, int h, Livre livre, float lift) {
+        paint(g, x, y, w, h, livre, lift, null);
+    }
+
+    /**
+     * Draws {@code image} filling the cover rectangle, centre-cropped.
+     *
+     * <p>Editions differ wildly in proportion — some covers are near-square, some are
+     * tall — so the image is scaled to cover the box and the overflow is trimmed
+     * equally from both sides. This is the same rule as CSS {@code object-fit: cover},
+     * which keeps the desktop and web shelves looking identical.
+     */
+    private static void paintArtwork(Graphics2D g, BufferedImage image, int x, int y, int w, int h) {
+        int iw = image.getWidth();
+        int ih = image.getHeight();
+        if (iw <= 0 || ih <= 0) return;
+
+        // Scale so the image covers the box, then centre the source rectangle.
+        double scale = Math.max((double) w / iw, (double) h / ih);
+        int drawW = (int) Math.ceil(iw * scale);
+        int drawH = (int) Math.ceil(ih * scale);
+        int dx = x + (w - drawW) / 2;
+        int dy = y + (h - drawH) / 2;
+
+        Object previous = g.getRenderingHint(RenderingHints.KEY_INTERPOLATION);
+        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+                RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g.drawImage(image, dx, dy, drawW, drawH, null);
+        if (previous != null) g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, previous);
+
+        // A whisper of shading down the left edge so the artwork still reads as a book
+        // rather than a flat tile pasted onto the card.
+        g.setPaint(new GradientPaint(x, y, Theme.alpha(Color.BLACK, 90),
+                x + Math.max(4, w * 0.06f), y, Theme.alpha(Color.BLACK, 0)));
+        g.fillRect(x, y, Math.max(4, Math.round(w * 0.06f)), h);
     }
 
     /** Greedy word wrap, truncating the final line with an ellipsis when it overflows. */

@@ -100,7 +100,7 @@ export function ProfileView({
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-        className="overflow-hidden rounded-[--radius-xl] border border-line-soft bg-surface shadow-[--shadow-card]"
+        className="overflow-hidden rounded-(--radius-xl) border border-line-soft bg-surface shadow-(--shadow-card)"
       >
         <div className="relative h-28 bg-gradient-to-br from-navy-700 to-navy-600">
           <span className="absolute -right-10 -top-14 size-44 rounded-full bg-gold-500/25" />

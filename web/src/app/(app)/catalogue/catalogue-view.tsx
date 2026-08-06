@@ -90,7 +90,7 @@ export function CatalogueView({
       />
 
       {/* Search bar: category selector, query field and submit, in one pill. */}
-      <div className="flex flex-col gap-3 rounded-[--radius-xl] border border-line-soft bg-surface p-2 shadow-[--shadow-card] sm:flex-row sm:items-center sm:rounded-full sm:p-2">
+      <div className="flex flex-col gap-3 rounded-(--radius-xl) border border-line-soft bg-surface p-2 shadow-(--shadow-card) sm:flex-row sm:items-center sm:rounded-full sm:p-2">
         <div className="sm:w-52">
           <Select value={category} onValueChange={setCategory}>
             <SelectTrigger className="h-12 rounded-full border-0 bg-transparent sm:border-r sm:border-line-soft">
@@ -145,7 +145,7 @@ export function CatalogueView({
       </div>
 
       {results.length === 0 ? (
-        <div className="mt-6 rounded-[--radius-lg] border border-line-soft bg-surface shadow-[--shadow-card]">
+        <div className="mt-6 rounded-(--radius-lg) border border-line-soft bg-surface shadow-(--shadow-card)">
           <EmptyState
             icon={filtering ? Search : BookOpen}
             title={t(filtering ? "cat.empty.title" : "cat.empty.none")}

@@ -84,12 +84,23 @@ public final class Theme {
     public static final Color AMBER_SOFT = new Color(0xFD, 0xF2, 0xDC);
 
     // ── Geometry ─────────────────────────────────────────────────────────────
-    public static final int RADIUS_XS = 10;
-    public static final int RADIUS_SM = 14;
-    public static final int RADIUS = 18;
-    public static final int RADIUS_LG = 26;
+    /**
+     * The radius scale, in pixels.
+     *
+     * <p>These are the exact pixel values of {@code --radius-*} in the web client's
+     * globals.css. The two must move together: a book card, a dialog and a badge are
+     * meant to read as the same object in both editions, and a mismatched corner is
+     * the first thing that gives that away.
+     *
+     * <p>Every step is deliberately generous — the design leans on soft, continuous
+     * corners rather than on borders to separate surfaces.
+     */
+    public static final int RADIUS_XS = 14;
+    public static final int RADIUS_SM = 18;
+    public static final int RADIUS = 24;
+    public static final int RADIUS_LG = 30;
     /** The large radius on the main content surface, as in the reference layout. */
-    public static final int RADIUS_XL = 36;
+    public static final int RADIUS_XL = 40;
     public static final int PILL = 999;
     public static final int CARD_RADIUS = RADIUS_LG;
 

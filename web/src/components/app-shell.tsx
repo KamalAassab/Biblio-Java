@@ -78,7 +78,7 @@ export function AppShell({
     <div className="flex min-h-dvh gap-4 p-3 sm:p-4">
       {/* Desktop sidebar */}
       <aside className="hidden w-64 shrink-0 lg:block">
-        <div className="sticky top-4 flex h-[calc(100dvh-2rem)] flex-col rounded-[--radius-xl] border border-line-soft bg-surface p-4 shadow-[--shadow-card]">
+        <div className="sticky top-4 flex h-[calc(100dvh-2rem)] flex-col rounded-(--radius-xl) border border-line-soft bg-surface p-4 shadow-(--shadow-card)">
           <SidebarBody user={user} />
         </div>
       </aside>
@@ -99,7 +99,7 @@ export function AppShell({
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={{ type: "spring", damping: 30, stiffness: 300 }}
-              className="fixed inset-y-3 left-3 z-50 flex w-[17rem] flex-col rounded-[--radius-xl] border border-line-soft bg-surface p-4 shadow-[--shadow-card-hover] lg:hidden"
+              className="fixed inset-y-3 left-3 z-50 flex w-[17rem] flex-col rounded-(--radius-xl) border border-line-soft bg-surface p-4 shadow-(--shadow-card-hover) lg:hidden"
             >
               <button
                 onClick={() => setMobileOpen(false)}
@@ -130,7 +130,7 @@ function SidebarBody({ user }: { user: SessionUser }) {
   return (
     <>
       <Link href="/dashboard" className="flex items-center gap-3 px-2 py-2">
-        <span className="flex size-11 shrink-0 items-center justify-center rounded-[--radius-sm] bg-white shadow-[--shadow-card]">
+        <span className="flex size-11 shrink-0 items-center justify-center rounded-(--radius-sm) bg-white shadow-(--shadow-card)">
           <Image
             src="/fsts-logo.png"
             alt=""
@@ -213,7 +213,7 @@ function NavItem({
     <>
       <span
         className={cn(
-          "flex size-9 shrink-0 items-center justify-center rounded-[--radius-xs] transition-colors duration-200",
+          "flex size-9 shrink-0 items-center justify-center rounded-(--radius-xs) transition-colors duration-200",
           active
             ? "bg-gold-500 text-white shadow-[0_2px_8px_-2px_rgb(233_164_0/0.6)]"
             : destructive
@@ -239,7 +239,7 @@ function NavItem({
   );
 
   const className = cn(
-    "group flex w-full items-center gap-3 rounded-[--radius-sm] px-2 py-2 text-left transition-colors",
+    "group flex w-full items-center gap-3 rounded-(--radius-sm) px-2 py-2 text-left transition-colors",
     !active && "hover:bg-surface-sunk",
   );
 
@@ -312,7 +312,7 @@ function CreditCard() {
       href={PORTFOLIO}
       target="_blank"
       rel="noopener noreferrer"
-      className="group relative block overflow-hidden rounded-[--radius-md] bg-gradient-to-br from-navy-700 to-navy-600 p-4 transition-transform duration-300 hover:-translate-y-0.5"
+      className="group relative block overflow-hidden rounded-(--radius-md) bg-gradient-to-br from-navy-700 to-navy-600 p-4 transition-transform duration-300 hover:-translate-y-0.5"
     >
       <span className="absolute -right-6 -top-8 size-20 rounded-full bg-gold-500/30 transition-transform duration-500 group-hover:scale-125" />
       <span className="relative block text-[10px] font-semibold uppercase tracking-wider text-white/65">

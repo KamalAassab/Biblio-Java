@@ -498,20 +498,37 @@ public class DatabaseConnection {
     @SuppressWarnings("unchecked")
     public static ArrayList<Livre> getLivres() {
         return (ArrayList<Livre>) CACHE.get("livres", () -> {
-            ArrayList<Livre> livres = new ArrayList<>();
-            String query = "SELECT id_livre, titre, auteur, genre, resume_livre, "
-                    + "COALESCE(disponibilite, TRUE) FROM livre ORDER BY id_livre";
-            try (Connection c = getConnection(); PreparedStatement ps = prepare(c, query);
-                 ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    livres.add(new Livre(rs.getInt(1), rs.getString(2), rs.getString(3),
-                            rs.getString(4), rs.getString(5), rs.getBoolean(6)));
-                }
-            } catch (SQLException e) {
-                log("getLivres", e);
+            // image_url is added by the web project's migration (`npm run db:seed`).
+            // A database that predates it is still perfectly usable, so a failure here
+            // retries without the column rather than leaving the catalogue empty.
+            ArrayList<Livre> livres = selectLivres(true);
+            return livres != null ? livres : selectLivres(false);
+        });
+    }
+
+    /** Reads the catalogue, optionally including the cover column. Null on failure. */
+    private static ArrayList<Livre> selectLivres(boolean withCovers) {
+        ArrayList<Livre> livres = new ArrayList<>();
+        String query = "SELECT id_livre, titre, auteur, genre, resume_livre, "
+                + "COALESCE(disponibilite, TRUE)"
+                + (withCovers ? ", image_url" : "")
+                + " FROM livre ORDER BY id_livre";
+
+        try (Connection c = getConnection(); PreparedStatement ps = prepare(c, query);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                Livre livre = new Livre(rs.getInt(1), rs.getString(2), rs.getString(3),
+                        rs.getString(4), rs.getString(5), rs.getBoolean(6));
+                if (withCovers) livre.setImageUrl(rs.getString(7));
+                livres.add(livre);
             }
             return livres;
-        });
+        } catch (SQLException e) {
+            // Only the fallback attempt is worth reporting: the first failing is the
+            // expected outcome on an un-migrated database.
+            if (!withCovers) log("getLivres", e);
+            return null;
+        }
     }
 
     // ── Users ────────────────────────────────────────────────────────────────

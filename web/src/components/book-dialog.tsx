@@ -124,7 +124,12 @@ export function BookDialog({
           {mode === "view" && book ? (
             <div className="flex flex-col gap-6 sm:flex-row">
               <div className="w-40 shrink-0 self-center sm:self-start">
-                <BookCover title={book.titre} author={book.auteur} genre={book.genre} />
+                <BookCover
+                  title={book.titre}
+                  author={book.auteur}
+                  genre={book.genre}
+                  imageUrl={book.imageUrl}
+                />
               </div>
               <div className="min-w-0 flex-1">
                 <h3 className="text-xl font-bold leading-snug text-ink">{book.titre}</h3>
@@ -195,7 +200,7 @@ export function BookDialog({
                 />
               </Field>
 
-              <div className="flex items-center justify-between rounded-[--radius-sm] bg-surface-sunk px-4 py-3">
+              <div className="flex items-center justify-between rounded-(--radius-sm) bg-surface-sunk px-4 py-3">
                 <Label htmlFor="disponible" className="text-sm">
                   {t("book.available")}
                 </Label>

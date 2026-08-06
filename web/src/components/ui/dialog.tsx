@@ -28,7 +28,7 @@ export function DialogContent({
         className={cn(
           "fixed left-1/2 top-1/2 z-50 grid w-[calc(100vw-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 gap-5",
           "max-h-[calc(100vh-2rem)] overflow-y-auto scroll-slim",
-          "rounded-[--radius-xl] border border-line-soft bg-surface p-7 shadow-[--shadow-card-hover]",
+          "rounded-(--radius-xl) border border-line-soft bg-surface p-7 shadow-(--shadow-card-hover)",
           "duration-200 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95",
           "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95",
           className,

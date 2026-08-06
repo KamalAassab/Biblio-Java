@@ -41,7 +41,7 @@ export function ConfirmDialog({
       <DialogContent className="max-w-md" showClose={false}>
         <span
           className={cn(
-            "flex size-12 items-center justify-center rounded-[--radius-sm]",
+            "flex size-12 items-center justify-center rounded-(--radius-sm)",
             destructive ? "bg-bad-soft text-bad" : "bg-navy-100 text-navy-600",
           )}
         >

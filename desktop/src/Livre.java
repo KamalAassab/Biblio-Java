@@ -4,6 +4,15 @@ public class Livre extends Document{
     private String resume;
     private boolean disponibilite;
 
+    /**
+     * URL de la couverture, renseignée par `npm run db:covers` côté web.
+     * Null quand aucune illustration n'a été trouvée : l'application dessine alors
+     * la couverture générée (dégradé + titre).
+     *
+     * Volontairement hors du constructeur, qui reste celui du sujet.
+     */
+    private String imageUrl;
+
     // Constructeur avec paramètres
     public Livre(int id, String titre, String auteur, String genre, String resume, boolean disponibilite) {
         super(id, titre, auteur, genre);
@@ -36,6 +45,14 @@ public class Livre extends Document{
 
     public void setDisponibilite(boolean disponibilite) {
         this.disponibilite = disponibilite;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
 }

@@ -112,7 +112,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
         position="bottom-center"
         toastOptions={{
           className:
-            "rounded-full border border-line-soft bg-[#1a222e] text-white shadow-[--shadow-card-hover]",
+            "rounded-full border border-line-soft bg-[#1a222e] text-white shadow-(--shadow-card-hover)",
         }}
       />
     </LanguageProvider>

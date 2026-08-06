@@ -48,7 +48,9 @@ public class BookCard extends Card {
         int coverX = x + PAD;
         int coverY = y + PAD - Math.round(2 * lift);
 
-        BookCover.paint(g, coverX, coverY, coverW, coverH, livre, lift);
+        // Artwork arrives asynchronously; repaint just this card when it lands so the
+        // cover fades in without the grid re-laying out.
+        BookCover.paint(g, coverX, coverY, coverW, coverH, livre, lift, this::repaint);
 
         int textTop = coverY + coverH + 16;
         int maxWidth = w - PAD * 2;

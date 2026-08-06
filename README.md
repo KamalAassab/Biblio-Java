@@ -104,7 +104,14 @@ account created on the desktop signs in on the web and vice versa.*
 > **Fichiers partagés à garder synchronisés · Keep these in sync**
 > `desktop/src/Security.java` ↔ `web/src/lib/password.ts` (format de hachage),
 > `desktop/src/I18n.java` ↔ `web/src/lib/i18n.ts` (clés de traduction),
-> `desktop/src/gui/Theme.java` ↔ `web/src/app/globals.css` (jetons de design).
+> `desktop/src/gui/Theme.java` ↔ `web/src/app/globals.css` (jetons de design —
+> `RADIUS_*` et `--radius-*` sont les mêmes valeurs en pixels : 14 / 18 / 24 / 30 / 40).
+
+> **Syntaxe Tailwind v4** — une variable CSS s'écrit `rounded-(--radius-lg)`, avec des
+> **parenthèses**. La forme `rounded-[--radius-lg]` est celle de Tailwind v3 : elle
+> compile sans erreur mais produit une règle invalide, donc un coin parfaitement carré.
+> *Tailwind v4 uses parentheses for CSS variables; the v3 bracket form silently
+> compiles to an invalid rule and renders square.*
 
 ---
 
@@ -132,6 +139,21 @@ cd web
 npm install
 npm run db:seed
 ```
+
+Récupérer les couvertures réelles (une seule fois, ~2 min pour 160 livres) :
+
+```bash
+npm run db:covers
+```
+
+Le script interroge Open Library puis Google Books, vérifie que le titre **et**
+l'auteur correspondent avant d'accepter une image, et stocke une **URL** dans
+`livre.image_url` — aucune illustration n'est copiée dans le dépôt. Les livres sans
+correspondance gardent la couverture générée (dégradé + titre), côté bureau comme côté
+web. `npm run db:covers -- --all` force une nouvelle résolution.
+
+*Fetches real cover art once. It stores a URL rather than copying artwork into the
+repository, and any book without a match keeps its generated cover.*
 
 ### 2. Bureau · Desktop
 

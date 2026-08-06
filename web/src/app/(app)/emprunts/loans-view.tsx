@@ -61,7 +61,7 @@ export function LoansView({ loans, isAdmin }: { loans: Loan[]; isAdmin: boolean 
         }
       />
 
-      <div className="overflow-hidden rounded-[--radius-lg] border border-line-soft bg-surface shadow-[--shadow-card]">
+      <div className="overflow-hidden rounded-(--radius-lg) border border-line-soft bg-surface shadow-(--shadow-card)">
         {loans.length === 0 ? (
           <EmptyState icon={Clock} title={t("loan.empty.title")} message={t("loan.empty.sub")} />
         ) : (

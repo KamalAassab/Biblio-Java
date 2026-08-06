@@ -126,7 +126,7 @@ public class BookDialog extends JDialog {
                 Theme.aa(g);
                 int w = 186;
                 int h = BookCover.heightFor(w);
-                BookCover.paint(g, 8, (getHeight() - h) / 2, w, h, livre, 0.5f);
+                BookCover.paint(g, 8, (getHeight() - h) / 2, w, h, livre, 0.5f, this::repaint);
                 g.dispose();
             }
         };

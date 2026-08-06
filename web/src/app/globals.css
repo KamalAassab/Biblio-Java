@@ -50,12 +50,15 @@
   --color-bad: #e04a3f;
   --color-bad-soft: #fdeae8;
 
-  /* Radii — generous, matching the desktop surfaces */
-  --radius-xs: 0.625rem;
-  --radius-sm: 0.875rem;
-  --radius-md: 1.125rem;
-  --radius-lg: 1.625rem;
-  --radius-xl: 2.25rem;
+  /* Radii — generous, matching the desktop surfaces.
+     These are the exact pixel values of Theme.RADIUS_* in the desktop client
+     (14 / 18 / 24 / 30 / 40px). The two scales must move together, or the same
+     card stops looking like the same object across the two editions. */
+  --radius-xs: 0.875rem;
+  --radius-sm: 1.125rem;
+  --radius-md: 1.5rem;
+  --radius-lg: 1.875rem;
+  --radius-xl: 2.5rem;
 
   /* Elevation — soft, warm-tinted, wide */
   --shadow-card: 0 1px 2px rgb(90 78 55 / 0.06), 0 8px 24px -8px rgb(90 78 55 / 0.14);

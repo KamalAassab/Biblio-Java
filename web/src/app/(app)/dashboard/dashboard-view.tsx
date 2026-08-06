@@ -87,7 +87,7 @@ export function DashboardView({
         />
 
         {recent.length === 0 ? (
-          <div className="rounded-[--radius-lg] border border-line-soft bg-surface shadow-[--shadow-card]">
+          <div className="rounded-(--radius-lg) border border-line-soft bg-surface shadow-(--shadow-card)">
             <EmptyState
               icon={BookOpen}
               title={t("cat.empty.none")}

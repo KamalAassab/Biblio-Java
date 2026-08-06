@@ -54,7 +54,7 @@ export function MembersView({
     <>
       <PageHeader title={t("page.utilisateurs.title")} subtitle={t("page.utilisateurs.sub")} />
 
-      <div className="overflow-hidden rounded-[--radius-lg] border border-line-soft bg-surface shadow-[--shadow-card]">
+      <div className="overflow-hidden rounded-(--radius-lg) border border-line-soft bg-surface shadow-(--shadow-card)">
         {members.length === 0 ? (
           <EmptyState icon={Users} title={t("user.empty.title")} message={t("user.empty.sub")} />
         ) : (

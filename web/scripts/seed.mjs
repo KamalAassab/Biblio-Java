@@ -9,43 +9,14 @@
  * one database.
  */
 
-import { neon } from "@neondatabase/serverless";
 import { pbkdf2, randomBytes } from "node:crypto";
 import { promisify } from "node:util";
 
+import { connect } from "./connection.mjs";
+
 const pbkdf2Async = promisify(pbkdf2);
 
-const connectionString = process.env.DATABASE_URL;
-if (!connectionString) {
-  console.error("DATABASE_URL is not set. Run with: npm run db:seed");
-  process.exit(1);
-}
-
-/**
- * Accepts either connection-string form — mirrors `toLibpqUrl` in src/lib/db.ts.
- * The Java client is usually configured with a JDBC URL, and the same value tends
- * to get copied here.
- */
-function toLibpqUrl(raw) {
-  const trimmed = raw.trim().replace(/^["']|["']$/g, "");
-  if (!trimmed.startsWith("jdbc:")) return trimmed;
-
-  const url = new URL(trimmed.slice("jdbc:".length));
-  const user = url.searchParams.get("user");
-  const password = url.searchParams.get("password");
-  url.searchParams.delete("user");
-  url.searchParams.delete("password");
-  url.searchParams.delete("channelBinding");
-  url.searchParams.delete("channel_binding");
-
-  if (user) url.username = encodeURIComponent(user);
-  if (password) url.password = encodeURIComponent(password);
-  if (!url.searchParams.has("sslmode")) url.searchParams.set("sslmode", "require");
-
-  return url.toString();
-}
-
-const sql = neon(toLibpqUrl(connectionString));
+const sql = connect("db:seed");
 
 // Must match src/lib/password.ts and Security.java.
 const ITERATIONS = 210_000;
@@ -59,7 +30,8 @@ async function hash(password) {
 const TABLES = [
   `CREATE TABLE IF NOT EXISTS livre (
      id_livre SERIAL PRIMARY KEY, titre VARCHAR(255) NOT NULL, auteur VARCHAR(255) NOT NULL,
-     genre VARCHAR(100), resume_livre TEXT, disponibilite BOOLEAN DEFAULT TRUE)`,
+     genre VARCHAR(100), resume_livre TEXT, disponibilite BOOLEAN DEFAULT TRUE,
+     image_url TEXT)`,
   `CREATE TABLE IF NOT EXISTS utilisateur (
      id_utilisateur SERIAL PRIMARY KEY, nom VARCHAR(255) NOT NULL, motDePasse VARCHAR(255),
      numero INTEGER, email VARCHAR(255), role_utilisateur VARCHAR(50))`,
@@ -77,6 +49,9 @@ const TABLES = [
 // Each is optional: a failure means it is already applied, or existing data blocks it.
 const MIGRATIONS = [
   `ALTER TABLE emprunt ADD COLUMN IF NOT EXISTS date_retour_livre DATE`,
+  // Cover artwork, resolved from Open Library / Google Books by `npm run db:covers`.
+  // Null means "no artwork found" — both clients then draw the generated gradient.
+  `ALTER TABLE livre ADD COLUMN IF NOT EXISTS image_url TEXT`,
   `ALTER TABLE emprunt ADD CONSTRAINT emprunt_livre_fk
      FOREIGN KEY (id_livre) REFERENCES livre(id_livre) ON DELETE CASCADE`,
   `ALTER TABLE emprunt ADD CONSTRAINT emprunt_user_fk
