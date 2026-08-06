@@ -1,29 +1,55 @@
-### IntelliJ IDEA ###
+# =============================================================
+#  BiblioTech - repository ignore rules
+#  Secrets first: nothing below this block may ever be committed.
+# =============================================================
+
+# ---- Secrets & credentials ----------------------------------
+.env
+.env.*
+*.env
+database.url
+*.pem
+*.key
+*.p12
+*.jks
+*.keystore
+secrets.json
+config.properties
+# Templates are safe to track - they hold placeholders, never real values.
+!.env.example
+!.env.local.example
+
+# ---- Desktop (Java) -----------------------------------------
+desktop/out/
+desktop/dist/
+*.class
+# Third-party jars in desktop/lib are intentionally tracked so the project
+# builds with no package manager. Everything else is not.
+*.jar
+!desktop/lib/*.jar
+
+# ---- Web (Next.js) ------------------------------------------
+node_modules/
+.next/
 out/
-!**/src/main/**/out/
-!**/src/test/**/out/
+.vercel/
+.turbo/
+next-env.d.ts
+*.tsbuildinfo
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
 
-### Eclipse ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-bin/
-!**/src/main/**/bin/
-!**/src/test/**/bin/
-
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-
-### VS Code ###
+# ---- IDE ----------------------------------------------------
+.idea/
 .vscode/
+*.iml
+.classpath
+.project
+.settings/
 
-### Mac OS ###
+# ---- OS -----------------------------------------------------
 .DS_Store
+Thumbs.db
+desktop.ini

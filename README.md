@@ -1,114 +1,248 @@
-# BiblioTech — Gestion de Bibliothèque (FST Settat)
+# BiblioTech — Gestion de Bibliothèque · Library Management
 
-Application de bureau en **Java / Swing** pour gérer une bibliothèque : livres, emprunts, réservations et utilisateurs, avec persistance **PostgreSQL**.
+<p align="center">
+  <img src="desktop/assets/fsts_logo.png" alt="FST Settat" width="90">
+</p>
 
-## Téléchargement
+<p align="center">
+  <strong>Faculté des Sciences et Techniques de Settat</strong><br>
+  Conçu et développé par <a href="https://kamal-aassab.vercel.app/">Kamal Aassab</a><br>
+  <em>Designed and built by <a href="https://kamal-aassab.vercel.app/">Kamal Aassab</a></em>
+</p>
 
-- [ZIP Windows 64 bits](dist/Biblio-Java-Windows-x64.zip)
-- [EXE Windows 64 bits](dist/jpackage/Biblio-Java-Windows-x64/Biblio-Java-Windows-x64.exe)
+---
 
-## Lancement direct sur PC
+**FR** — Un seul projet, deux interfaces qui partagent la même base PostgreSQL (Neon) :
+une application **bureau Java Swing** et une **application web Next.js** déployable sur
+Vercel. Même identité visuelle, mêmes données, mêmes comptes. Interface bilingue
+français / anglais.
 
-Vous pouvez directement double-cliquer sur **`Biblio-Java.exe`** situé à la racine du projet. Ce fichier lance l'application immédiatement sans ouvrir de fenêtre de terminal / invite de commande.
+**EN** — One project, two interfaces sharing a single PostgreSQL (Neon) database: a
+**Java Swing desktop app** and a **Next.js web app** deployable to Vercel. Same visual
+identity, same data, same accounts. Bilingual French / English interface.
 
-## Installation Windows (mode utilisateur)
+---
 
-1. Téléchargez le ZIP ou l'EXE.
-2. Installez l'application dans le dossier utilisateur : `%LOCALAPPDATA%\Programs\Biblio-Java`.
-3. Le fichier de configuration DB doit être placé ici : `%LOCALAPPDATA%\Biblio-Java\database.url`.
-4. Lancez l'application via `Biblio-Java-Windows-x64.exe`.
+## Structure
 
-Astuce : si vous partez du code source, exécutez `install-user.bat` pour copier automatiquement l'application dans le dossier utilisateur et créer la configuration DB.
-
-## Configuration de la base de données
-
-L'application lit l'URL de connexion dans cet ordre :
-
-1. variable d'environnement `DATABASE_URL`
-2. fichier `%LOCALAPPDATA%\Biblio-Java\database.url`
-
-Format accepté :
-
-```text
-postgresql://<user>:<password>@<host>/<db>?sslmode=require
+```
+.
+├── desktop/              Application bureau — Java 17 + Swing
+│   ├── src/              Modele, securite, i18n, couche donnees
+│   │   └── gui/          Design system et vues
+│   ├── assets/           Logo FST + fontes Inter
+│   ├── lib/              Pilote PostgreSQL + FlatLaf
+│   ├── build.bat / .sh   Compilation
+│   └── run.bat           Compilation + lancement
+│
+├── web/                  Application web — Next.js 16 + React 19
+│   ├── src/app/          App Router : pages et Route Handlers
+│   ├── src/components/   shadcn/ui + composants metier
+│   ├── src/lib/          Session, mots de passe, requetes, validation, i18n
+│   └── scripts/seed.mjs  Migration de schema + donnees de demonstration
+│
+├── docs/screenshots/     Captures d'ecran
+├── .env                  Configuration bureau (ignoree par Git)
+└── .env.example          Modele a copier
 ```
 
-Ou bien une URL JDBC complète :
+Les deux interfaces écrivent dans les **mêmes tables**. Les mots de passe utilisent un
+format identique (`pbkdf2$210000$sel$empreinte`), donc un compte créé côté bureau se
+connecte côté web et inversement.
 
-```text
-jdbc:postgresql://<host>/<db>?user=<user>&password=<password>&sslmode=require
-```
+*Both interfaces write to the **same tables**. Passwords use an identical format, so an
+account created on the desktop signs in on the web and vice versa.*
 
-## Mise en place de la base
+| Couche · Layer | Technologie |
+| --- | --- |
+| Bureau · Desktop | Java 17, Swing, JDBC, PBKDF2 |
+| Web | Next.js 16, React 19, TypeScript, Tailwind CSS 4, shadcn/ui, Framer Motion |
+| Base · Database | Neon PostgreSQL (serverless) |
+| Hébergement · Hosting | Vercel |
 
-1. Créez une base PostgreSQL sur Neon ou sur votre serveur.
-2. Copiez l'URL de connexion dans `database.url`.
-3. Démarrez l'application.
-4. Les tables sont créées automatiquement au premier lancement.
-5. Les données de démonstration sont ajoutées si la base est vide.
+> **Fichiers partagés à garder synchronisés · Keep these in sync**
+> `desktop/src/Security.java` ↔ `web/src/lib/password.ts` (format de hachage),
+> `desktop/src/I18n.java` ↔ `web/src/lib/i18n.ts` (clés de traduction),
+> `desktop/src/gui/Theme.java` ↔ `web/src/app/globals.css` (jetons de design).
 
-Exemple de fichier `database.url` :
+---
 
-```text
-postgresql://utilisateur:motdepasse@host/neondb?sslmode=require
-```
+## Démarrage · Getting started
 
-## Comptes de démonstration
+### 1. Base de données · Database
 
-| Rôle | Identifiant | Mot de passe |
-| --- | --- | --- |
-| Admin | `admin` | `admin123` |
-| Lecteur | `lecteur` | `lecteur123` |
-
-## Fonctionnalités
-
-- **Tableau de bord** : statistiques, raccourcis et vue d'ensemble.
-- **Catalogue** : recherche par titre, auteur, genre et gestion des livres.
-- **Emprunts** : suivi des prêts et création d'un nouvel emprunt.
-- **Réservations** : suivi des réservations et création d'une réservation.
-- **Utilisateurs** : liste des comptes et rôles.
-
-## Captures d'écran
-
-### Connexion
-
-![Connexion](screenshots/01-login.png)
-
-Interface de connexion sécurisée avec branding institutionnel FST Settat et accès par rôle (Admin / Lecteur).
-
-### Tableau de bord
-
-![Tableau de bord](screenshots/02-dashboard.png)
-
-Vue d'ensemble de la bibliothèque avec les indicateurs clés, les raccourcis et les actions rapides.
-
-### Catalogue
-
-![Catalogue](screenshots/03-catalogue.png)
-
-Liste des livres en cartes avec recherche par titre, auteur ou genre, filtrage par catégorie et actions de gestion.
-
-### Emprunts
-
-![Emprunts](screenshots/04-emprunts.png)
-
-Tableau de suivi des emprunts avec l'état de chaque prêt, les dates importantes et la création d'un nouvel emprunt.
-
-### Réservations
-
-![Réservations](screenshots/05-reservations.png)
-
-Vue centralisée des réservations pour consulter l'historique et enregistrer une nouvelle réservation.
-
-### Utilisateurs
-
-![Utilisateurs](screenshots/06-utilisateurs.png)
-
-Liste des membres de la bibliothèque avec le rôle, les coordonnées et la consultation rapide des comptes.
-
-## Compilation depuis le code source
+Créez un projet sur [Neon](https://console.neon.tech), puis :
 
 ```bash
-javac -encoding UTF-8 -cp "lib/postgresql-42.7.4.jar;lib/flatlaf-3.5.4.jar" -d out src/*.java src/gui/*.java
-java -cp "out;lib/postgresql-42.7.4.jar;lib/flatlaf-3.5.4.jar" GUI_Main
+cp .env.example .env          # puis renseignez DATABASE_URL
+cd web && cp .env.local.example .env.local
 ```
+
+Générer le secret de session :
+
+```bash
+node -e "console.log(require('crypto').randomBytes(32).toString('base64url'))"
+```
+
+Créer le schéma et les données de démonstration :
+
+```bash
+cd web
+npm install
+npm run db:seed
+```
+
+### 2. Bureau · Desktop
+
+```bash
+desktop\run.bat          # Windows — compile puis lance
+./desktop/build.sh run   # macOS / Linux
+```
+
+Sous Windows, `desktop\Biblio-Java.exe` lance également l'application.
+Les scripts fonctionnent depuis n'importe quel dossier et détectent le JDK via
+`JAVA_HOME`, sinon `javac` / `java` du `PATH`.
+
+### 3. Web
+
+```bash
+cd web
+npm run dev          # http://localhost:3000
+npm run typecheck    # verification TypeScript
+npm run build        # build de production
+```
+
+---
+
+## Déploiement Vercel · Vercel deployment
+
+1. **Créez une branche Neon dédiée à la démo.** Ne pointez jamais le déploiement public
+   vers votre base principale.
+   *Create a dedicated Neon branch for the demo — never point the public deployment at
+   your main database.*
+
+2. **Importez le dépôt sur Vercel** et réglez **Root Directory** sur `web`.
+
+3. **Variables d'environnement** (Project → Settings → Environment Variables) :
+
+   ```text
+   DATABASE_URL     = postgresql://...   (branche de demo)
+   SESSION_SECRET   = ...                (nouvelle valeur, differente du local)
+   DEMO_MODE        = true
+   ```
+
+   Aucune n'est préfixée `NEXT_PUBLIC_`, donc **rien n'atteint le navigateur**. Une
+   importation accidentelle côté client ferait échouer le build.
+
+4. **Initialisez la base de démo** une fois, depuis votre machine, avec `.env.local`
+   pointé sur cette branche : `npm run db:seed`.
+
+5. **Déployez.**
+
+En `DEMO_MODE`, les comptes de démonstration ne peuvent être ni renommés, ni supprimés,
+ni voir leur mot de passe modifié — le lien public reste fonctionnel dans la durée.
+
+---
+
+## Sécurité · Security
+
+### Secrets
+
+- Aucune information d'identification dans le code source.
+- `.gitignore` exclut `.env`, `.env.*`, `config.properties`, clés et certificats.
+- Journaux et messages d'erreur passent par une fonction de rédaction qui masque mots
+  de passe et chaînes de connexion.
+
+### Authentification
+
+- **PBKDF2-HMAC-SHA256**, 210 000 itérations, sel de 16 octets (référence OWASP).
+- Comparaison à **temps constant** ; un identifiant inexistant effectue le même travail
+  cryptographique qu'un mot de passe erroné, pour ne pas révéler quels comptes existent.
+- Les anciennes lignes en clair sont **migrées automatiquement** à la première connexion
+  réussie de leur propriétaire.
+- Limitation des tentatives avec temporisation exponentielle **par identifiant** — un
+  attaquant ciblant un compte ne peut pas bloquer les autres utilisateurs.
+
+### Web
+
+| Protection | Mise en œuvre |
+| --- | --- |
+| Sessions | Cookie `httpOnly`, `SameSite=Lax`, `Secure`, signé HMAC-SHA256, 8 h |
+| CSRF | Jeton double-soumission vérifié sur chaque écriture |
+| En-têtes | CSP, HSTS, `X-Frame-Options`, `X-Content-Type-Options`, `Permissions-Policy`, COOP/CORP |
+| Injection SQL | Requêtes paramétrées uniquement (templates balisés) |
+| Validation | Schémas Zod ; caractères de contrôle, surcharges bidirectionnelles et caractères invisibles supprimés |
+| Autorisation | `requireSession()` / `requireAdmin()` sur chaque route et chaque page |
+| Limitation de débit | Par IP, sur la connexion, les écritures et le changement de mot de passe |
+| Redirections | `?next=` restreint aux chemins internes (pas de redirection ouverte) |
+| Indexation | `robots: noindex` sur la démo |
+
+> **Note honnête sur le limiteur de débit** — il est en mémoire, donc son périmètre est
+> l'instance serverless, pas le déploiement entier. C'est le bon compromis pour une
+> démonstration ; une mise en production sous trafic réel devrait le déplacer vers
+> Upstash/Redis, sans changer les appels.
+
+> **Note sur le proxy Edge** — `web/src/proxy.ts` vérifie uniquement la *présence* du
+> cookie de session : l'Edge runtime n'a pas accès à `node:crypto` et ne peut donc pas
+> valider la signature. L'autorisation réelle a lieu dans chaque route et chaque page.
+
+### Base de données
+
+- TLS forcé (`sslmode=require`), même si l'URL fournie demande autre chose.
+- Contraintes de clés étrangères avec `ON DELETE CASCADE`.
+- Index unique sur `LOWER(nom)` — un identifiant, un compte.
+- Identifiants générés par séquences PostgreSQL, remplaçant l'ancien `MAX(id) + 1` qui
+  perdait silencieusement des écritures concurrentes.
+- Emprunts et retours en **transaction** avec verrouillage de ligne, pour qu'un même
+  exemplaire ne puisse pas être prêté deux fois.
+
+---
+
+## Fonctionnalités · Features
+
+| Section | FR | EN |
+| --- | --- | --- |
+| Connexion | Authentification par rôle, comptes de démonstration | Role-based sign-in, demo accounts |
+| Tableau de bord | Indicateurs, ajouts récents, actions rapides | Metrics, recent additions, quick actions |
+| Catalogue | Recherche, filtres par catégorie et disponibilité | Search, category and availability filters |
+| Emprunts | Suivi des prêts, retards, enregistrement des retours | Loan tracking, overdue flags, returns |
+| Réservations | Demandes des lecteurs | Reader requests |
+| Utilisateurs | Annuaire, rôles, suppression (admin) | Directory, roles, deletion (admin) |
+| Profil | Coordonnées et changement de mot de passe | Details and password change |
+
+Les deux interfaces basculent entre français et anglais à tout moment ; le choix est
+mémorisé d'une session à l'autre.
+
+---
+
+## Captures d'écran · Screenshots
+
+| | |
+| --- | --- |
+| ![Connexion](docs/screenshots/01-login.png) | ![Tableau de bord](docs/screenshots/02-dashboard.png) |
+| **Connexion** — identité institutionnelle et accès par rôle | **Tableau de bord** — indicateurs et ajouts récents |
+| ![Catalogue](docs/screenshots/03-catalogue.png) | ![Emprunts](docs/screenshots/04-emprunts.png) |
+| **Catalogue** — recherche et filtres | **Emprunts** — suivi des prêts et des retards |
+| ![Réservations](docs/screenshots/05-reservations.png) | ![Profil](docs/screenshots/07-profile.png) |
+| **Réservations** — demandes des lecteurs | **Profil** — informations et mot de passe |
+
+---
+
+## Comptes de démonstration · Demo accounts
+
+| Rôle · Role | Identifiant · Username | Mot de passe · Password |
+| --- | --- | --- |
+| Administrateur · Administrator | `admin` | `admin123` |
+| Lecteur · Reader | `lecteur` | `lecteur123` |
+
+> Ces identifiants sont destinés à la démonstration. Changez-les avant tout usage réel.
+> *These credentials are for demonstration only. Change them before any real use.*
+
+---
+
+<p align="center">
+  <sub>
+    Projet académique — Faculté des Sciences et Techniques de Settat<br>
+    <a href="https://kamal-aassab.vercel.app/">kamal-aassab.vercel.app</a>
+  </sub>
+</p>

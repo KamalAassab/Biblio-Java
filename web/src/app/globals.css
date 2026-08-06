@@ -1,0 +1,166 @@
+@import "tailwindcss";
+
+/*
+ * BiblioTech design tokens.
+ *
+ * The palette is the FST Settat crest — institutional navy and academic gold — laid
+ * over a warm ivory canvas. These values are kept in step with `Theme.java` in the
+ * desktop client so the two editions read as one product.
+ */
+
+@theme {
+  /* Brand */
+  --color-navy-50: #eef4fb;
+  --color-navy-100: #e3ecf6;
+  --color-navy-200: #c3d6ec;
+  --color-navy-400: #3a6fa5;
+  --color-navy-500: #0b5aa8;
+  --color-navy-600: #004080;
+  --color-navy-700: #002b57;
+  --color-navy-900: #0a1d36;
+
+  --color-gold-100: #fdf0d2;
+  --color-gold-300: #f5c13d;
+  --color-gold-400: #f5b72e;
+  --color-gold-500: #e9a400;
+  --color-gold-700: #a45b0b;
+
+  /* Canvas & surfaces */
+  --color-canvas: #efeae0;
+  --color-canvas-deep: #e6e0d2;
+  --color-surface: #ffffff;
+  --color-surface-sunk: #f7f4ee;
+  --color-surface-chip: #f2efe8;
+
+  /* Ink */
+  --color-ink: #151b23;
+  --color-ink-soft: #3f4854;
+  --color-ink-muted: #777f8b;
+  --color-ink-faint: #a3a9b4;
+
+  /* Lines */
+  --color-line: #e4dfd4;
+  --color-line-soft: #eeeae1;
+
+  /* Status */
+  --color-ok: #1b9e5a;
+  --color-ok-soft: #e3f5ea;
+  --color-warn: #d97706;
+  --color-warn-soft: #fdf2dc;
+  --color-bad: #e04a3f;
+  --color-bad-soft: #fdeae8;
+
+  /* Radii — generous, matching the desktop surfaces */
+  --radius-xs: 0.625rem;
+  --radius-sm: 0.875rem;
+  --radius-md: 1.125rem;
+  --radius-lg: 1.625rem;
+  --radius-xl: 2.25rem;
+
+  /* Elevation — soft, warm-tinted, wide */
+  --shadow-card: 0 1px 2px rgb(90 78 55 / 0.06), 0 8px 24px -8px rgb(90 78 55 / 0.14);
+  --shadow-card-hover: 0 2px 4px rgb(90 78 55 / 0.08), 0 18px 40px -12px rgb(90 78 55 / 0.22);
+  --shadow-cover: 0 3px 8px rgb(20 16 10 / 0.18), 0 14px 32px -10px rgb(20 16 10 / 0.3);
+  --shadow-cover-hover: 0 6px 14px rgb(20 16 10 / 0.22), 0 26px 48px -12px rgb(20 16 10 / 0.36);
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  --animate-rise: rise 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-fade: fade 0.3s ease-out both;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@layer base {
+  * {
+    border-color: var(--color-line);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    /* Inter's optical sizing and tabular figures keep dense tables aligned. */
+    font-feature-settings: "cv11", "ss01";
+    font-variant-numeric: tabular-nums;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Visible, branded focus ring — never remove focus styling outright. */
+  :focus-visible {
+    outline: 2px solid var(--color-navy-600);
+    outline-offset: 2px;
+    border-radius: var(--radius-xs);
+  }
+
+  ::selection {
+    background: var(--color-gold-100);
+    color: var(--color-navy-700);
+  }
+
+  /* Respect people who have asked the OS to reduce motion. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  /* Slim, unobtrusive scrollbars matching the desktop client. */
+  .scroll-slim {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(180 171 153 / 0.7) transparent;
+  }
+
+  .scroll-slim::-webkit-scrollbar {
+    width: 9px;
+    height: 9px;
+  }
+
+  .scroll-slim::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scroll-slim::-webkit-scrollbar-thumb {
+    background-color: rgb(180 171 153 / 0.7);
+    border-radius: 9999px;
+  }
+
+  /* Hides the bar on horizontal shelves, which are dragged or wheel-scrolled. */
+  .scroll-none {
+    scrollbar-width: none;
+  }
+
+  .scroll-none::-webkit-scrollbar {
+    display: none;
+  }
+}
