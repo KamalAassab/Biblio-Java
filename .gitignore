@@ -44,6 +44,9 @@ yarn-error.log*
 # ---- IDE ----------------------------------------------------
 .idea/
 .vscode/
+.claude/
+.gemini/
+.cursor/
 *.iml
 .classpath
 .project
