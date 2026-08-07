@@ -67,7 +67,6 @@ Les deux clients partagent le même barème, à maintenir synchronisé :
 ├── START-DESKTOP-APP.bat   <-- DOUBLE-CLIC pour l'app bureau
 ├── START-WEB-APP.bat       <-- DOUBLE-CLIC pour l'app web
 ├── README.md
-├── .env.example            Modele a copier vers .env
 │
 ├── desktop/                Application bureau - Java 17 + Swing
 │   ├── src/                Modele, securite, i18n, couche donnees
@@ -89,13 +88,13 @@ Les deux clients partagent le même barème, à maintenir synchronisé :
 │   │   ├── seed.mjs        Schema, sequences, donnees de demonstration
 │   │   ├── fetch-covers.mjs  Resolution des couvertures
 │   │   └── connection.mjs  Normalisation de la chaine de connexion
-│   └── .env.local.example  Modele a copier vers .env.local
+│   └── .env.local          Variables d'environnement
 │
 └── docs/screenshots/       Captures d'écran (001-login.png à 008-about.png)
 ```
 
 Les fichiers `.env` et `.env.local` contiennent les identifiants et ne sont **jamais**
-versionnés. Copiez les modèles `.example` correspondants.
+versionnés.
 
 | Couche | Technologie |
 | --- | --- |

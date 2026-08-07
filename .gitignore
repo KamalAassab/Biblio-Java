@@ -16,7 +16,6 @@ database.url
 secrets.json
 config.properties
 # Templates are safe to track - they hold placeholders, never real values.
-!.env.example
 !.env.local.example
 
 # ---- Desktop (Java) -----------------------------------------
