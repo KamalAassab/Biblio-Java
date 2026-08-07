@@ -91,7 +91,7 @@ Les deux clients partagent le même barème, à maintenir synchronisé :
 │   │   └── connection.mjs  Normalisation de la chaine de connexion
 │   └── .env.local.example  Modele a copier vers .env.local
 │
-└── docs/screenshots/       Captures d'ecran
+└── docs/screenshots/       Captures d'écran (001-login.png à 008-about.png)
 ```
 
 Les fichiers `.env` et `.env.local` contiennent les identifiants et ne sont **jamais**
@@ -375,26 +375,18 @@ joker. Les couvertures sont le seul contenu externe chargé par l'application.
 
 ## Captures d'écran
 
-> Les captures ci-dessous ont été prises **avant** la reprise de la palette et
-> l'ajout des scénarios de démonstration : elles montrent l'ancien fond ivoire.
-> Pour les régénérer, depuis une machine dont l'accès au port 5432 n'est pas filtré :
->
-> ```bash
-> desktop\build.bat
-> cd desktop && java -cp "out;lib\postgresql-42.7.4.jar;lib\flatlaf-3.5.4.jar" GenerateScreenshots
-> ```
->
-> Les sept fichiers de `docs/screenshots/` sont réécrits en place.
+Aperçu des interfaces de l'application avec la nouvelle identité visuelle institutionnelle FST Settat (thème sombre/moderne et jetons de design FST) :
 
 | Capture | Ce qu'elle montre |
 | --- | --- |
-| ![Connexion](docs/screenshots/01-login.png) | **Connexion** — panneau institutionnel à gauche, formulaire à droite. Le blason est posé sur une plaque blanche : c'est le seul endroit où elle subsiste, le panneau étant bleu marine comme l'encre du blason lui-même. Les comptes de démonstration sont rappelés en bas. |
-| ![Tableau de bord](docs/screenshots/02-dashboard.png) | **Tableau de bord** — les quatre indicateurs en haut, le nombre de retards en légende, puis les ajouts récents au fonds et les actions rapides. |
-| ![Catalogue](docs/screenshots/03-catalogue.png) | **Catalogue** — la grille de couvertures, la recherche instantanée, le filtre par catégorie et les trois onglets de disponibilité. Chaque carte porte le titre, l'auteur, l'état et le genre. |
-| ![Emprunts](docs/screenshots/04-emprunts.png) | **Emprunts** — le registre des prêts. La colonne statut distingue les prêts en cours, l'échéance du jour et les retards, en indiquant le nombre exact de jours ; le bouton de retour clôt le prêt en un clic. |
-| ![Réservations](docs/screenshots/05-reservations.png) | **Réservations** — les demandes des lecteurs, les plus récentes en tête, avec leur date et le lecteur concerné. |
-| ![Utilisateurs](docs/screenshots/06-utilisateurs.png) | **Utilisateurs** — l'annuaire des comptes avec nom, adresse, numéro et rôle. Les actions de modification et de suppression sont réservées à l'administrateur. |
-| ![Profil](docs/screenshots/07-profile.png) | **Profil** — les coordonnées du compte connecté et le formulaire de changement de mot de passe. |
+| ![Connexion](docs/screenshots/001-login.png) | **Connexion** — Panneau institutionnel bleu marine à gauche avec blason FST, formulaire d'authentification à droite et identifiants de démo. |
+| ![Tableau de bord](docs/screenshots/002-dashboard.png) | **Tableau de bord** — Cartes d'indicateurs clés (livres, disponibles, emprunts, réservations, retards), ajouts récents et raccourcis d'actions rapides. |
+| ![Catalogue](docs/screenshots/003-catalogue.png) | **Catalogue** — Grille de couvertures réelles/générées, recherche instantanée (titre/auteur/genre), filtre par catégorie et onglets de disponibilité. |
+| ![Emprunts](docs/screenshots/004-emprunts.png) | **Emprunts** — Registre des prêts avec statut temps réel (en cours, échéance proche/du jour, jours de retard) et clôture en 1 clic. |
+| ![Réservations](docs/screenshots/005-reservations.png) | **Réservations** — Liste chronologique des demandes de réservation des lecteurs avec actions de gestion. |
+| ![Utilisateurs](docs/screenshots/006-utilisateurs.png) | **Utilisateurs** — Annuaire des membres (nom, courriel, téléphone, rôle) avec création et attribution des privilèges. |
+| ![Profil](docs/screenshots/007-profile.png) | **Profil** — Coordonnées du compte utilisateur actif et interface de changement de mot de passe sécurisé. |
+| ![À propos](docs/screenshots/008-about.png) | **À propos** — Boîte de dialogue institutionnelle présentant les détails du projet, la stack technique et la FST Settat. |
 
 ---
 
