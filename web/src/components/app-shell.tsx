@@ -379,15 +379,14 @@ function TopBar({
 
   return (
     <header className="flex items-center justify-between gap-3 px-1 py-3 sm:px-3">
-      <Button
-        variant="ghost"
-        size="icon"
+      <button
+        type="button"
         onClick={onOpenMenu}
-        className="lg:hidden rounded-(--radius-md) border border-line-soft bg-surface shadow-(--shadow-card) text-ink-soft hover:text-ink hover:bg-surface-chip"
+        className="lg:hidden flex size-10 items-center justify-center rounded-(--radius-md) border border-navy-200 bg-navy-600 text-white shadow-sm transition-colors hover:bg-navy-700 active:bg-navy-800"
         aria-label="Open menu"
       >
         <Menu className="size-5" />
-      </Button>
+      </button>
 
       <div className="ml-auto flex items-center gap-2">
         <Link

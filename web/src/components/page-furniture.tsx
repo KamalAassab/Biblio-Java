@@ -124,15 +124,15 @@ export function StatCard({
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: index * 0.06, ease: [0.22, 1, 0.36, 1] }}
-      className="rounded-(--radius-lg) border border-line-soft bg-surface p-6 shadow-(--shadow-card)"
+      className="rounded-(--radius-lg) border border-line-soft bg-surface p-3.5 sm:p-6 shadow-(--shadow-card)"
     >
-      <div className="flex items-start justify-between gap-4">
-        <p className="text-4xl font-extrabold leading-none tracking-tight text-ink">{shown}</p>
-        <span className={cn("flex size-11 items-center justify-center rounded-(--radius-sm)", tones[tone])}>
-          <Icon className="size-5" aria-hidden />
+      <div className="flex items-start justify-between gap-2 sm:gap-4">
+        <p className="text-2xl sm:text-4xl font-extrabold leading-none tracking-tight text-ink">{shown}</p>
+        <span className={cn("flex size-9 sm:size-11 items-center justify-center rounded-(--radius-sm)", tones[tone])}>
+          <Icon className="size-4 sm:size-5" aria-hidden />
         </span>
       </div>
-      <p className="mt-3 text-sm font-medium text-ink-muted">{label}</p>
+      <p className="mt-2 sm:mt-3 text-xs sm:text-sm font-medium text-ink-muted">{label}</p>
       {caption && <p className={cn("mt-1 text-xs font-medium", tones[tone].split(" ")[1])}>{caption}</p>}
     </motion.div>
   );
