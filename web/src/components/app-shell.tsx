@@ -383,10 +383,10 @@ function TopBar({
         variant="ghost"
         size="icon"
         onClick={onOpenMenu}
-        className="lg:hidden"
+        className="lg:hidden rounded-(--radius-md) border border-line-soft bg-surface shadow-(--shadow-card) text-ink-soft hover:text-ink hover:bg-surface-chip"
         aria-label="Open menu"
       >
-        <Menu />
+        <Menu className="size-5" />
       </Button>
 
       <div className="ml-auto flex items-center gap-2">

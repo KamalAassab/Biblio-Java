@@ -49,7 +49,7 @@ export function DashboardView({
     <>
       <PageHeader title={greeting} subtitle={t("page.dashboard.sub")} />
 
-      <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      <section className="grid grid-cols-2 gap-3 xl:grid-cols-4">
         <StatCard label={t("dash.stat.books")} value={stats.books} icon={BookOpen} tone="navy" index={0} />
         <StatCard
           label={t("dash.stat.available")}
