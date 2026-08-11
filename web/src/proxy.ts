@@ -71,7 +71,10 @@ function applySecurityHeaders(response: NextResponse): NextResponse {
       // Cover artwork is hotlinked from the two catalogue sources that `db:covers`
       // resolves against, named explicitly rather than allowed by wildcard. Images
       // are the only third-party content the app loads.
-      "img-src 'self' data: blob: https://covers.openlibrary.org https://books.google.com https://books.googleusercontent.com",
+      // Open Library's covers.openlibrary.org 302s to archive.org for a large share of
+       // titles, so archive.org must be allowed too or the browser drops the redirected
+       // image with a CSP violation and the cover silently never appears.
+      "img-src 'self' data: blob: https://covers.openlibrary.org https://archive.org https://*.archive.org https://books.google.com https://books.googleusercontent.com",
       "font-src 'self' data:",
       // The app talks only to its own origin; no third-party analytics or CDNs.
       "connect-src 'self'",

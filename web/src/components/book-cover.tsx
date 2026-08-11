@@ -77,9 +77,9 @@ export function BookCover({
       {showArtwork ? (
         <>
           {/*
-            Artwork fills the cover. Aspect ratios vary wildly between editions, so
-            `object-cover` crops rather than letterboxes — the gradient behind still
-            shows through in the instant before the image decodes.
+            Show the whole cover. Editions vary in aspect ratio, so `object-contain`
+            letterboxes against the gradient rather than cropping the title off the
+            top or the author off the bottom.
           */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
@@ -88,10 +88,8 @@ export function BookCover({
             loading="lazy"
             decoding="async"
             onError={() => setFailed(true)}
-            className="absolute inset-0 h-full w-full object-cover"
+            className="absolute inset-0 h-full w-full object-contain"
           />
-          {/* Keeps the spine reading as a book even over photographic artwork. */}
-          <div className="absolute inset-y-0 left-0 w-[5%] bg-gradient-to-r from-black/35 to-transparent" />
         </>
       ) : (
         <>
