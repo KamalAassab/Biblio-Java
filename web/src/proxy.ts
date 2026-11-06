@@ -78,7 +78,7 @@ function applySecurityHeaders(response: NextResponse): NextResponse {
       "font-src 'self' data:",
       // The app talks only to its own origin; no third-party analytics or CDNs.
       "connect-src 'self'",
-      "frame-ancestors 'none'",
+      "frame-ancestors 'self' https://www.kadigitalsolutions.com https://kadigitalsolutions.com",
       "base-uri 'self'",
       "form-action 'self'",
       "object-src 'none'",
@@ -87,7 +87,6 @@ function applySecurityHeaders(response: NextResponse): NextResponse {
   );
 
   headers.set("X-Content-Type-Options", "nosniff");
-  headers.set("X-Frame-Options", "DENY");
   headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
   headers.set("X-DNS-Prefetch-Control", "off");
   headers.set(
